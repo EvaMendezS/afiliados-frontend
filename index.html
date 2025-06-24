@@ -50,7 +50,7 @@
       border-radius: 5px;
       font-weight: bold;
       text-align: center;
-      font-size: 1.2em;
+      font-size: 18px;
     }
     #resultado.afiliado {
       background-color: #d4edda;
@@ -74,13 +74,6 @@
   <form id="formulario">
     <label for="dni">DNI</label>
     <input type="text" id="dni" name="dni" required />
-
-    <label for="nombre">Nombre</label>
-    <input type="text" id="nombre" name="nombre" required />
-
-    <label for="apellido">Apellido</label>
-    <input type="text" id="apellido" name="apellido" required />
-
     <button type="submit">Verificar</button>
   </form>
 
@@ -88,40 +81,42 @@
 
   <script>
     const form = document.getElementById('formulario');
-    const resultadoDiv = document.getElementById('resultado');
+    const resultado = document.getElementById('resultado');
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
+      resultado.textContent = '';
+      resultado.className = '';
 
       const dni = document.getElementById('dni').value.trim();
-      const nombre = document.getElementById('nombre').value.trim().toLowerCase();
-      const apellido = document.getElementById('apellido').value.trim().toLowerCase();
 
-      if (!dni || !nombre || !apellido) {
-        resultadoDiv.textContent = 'Por favor completá todos los campos.';
-        resultadoDiv.className = 'error';
+      if (!dni) {
+        resultado.textContent = '⚠️ Ingresá un DNI.';
+        resultado.className = 'error';
         return;
       }
 
       try {
         const response = await fetch('https://afiliados-verificacion-production.up.railway.app/verificar', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ dni, nombre, apellido })
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ dni })
         });
 
         const data = await response.json();
 
         if (data.afiliado) {
-          resultadoDiv.textContent = `✅ AFILIADO ENCONTRADO: ${data.datos.nombre} ${data.datos.apellido}`;
-          resultadoDiv.className = 'afiliado';
+          resultado.textContent = `✅ AFILIADO: ${data.datos.nombre} ${data.datos.apellido} (N° ${data.datos.id})`;
+          resultado.className = 'afiliado';
         } else {
-          resultadoDiv.textContent = '❌ AFILIADO NO ENCONTRADO';
-          resultadoDiv.className = 'no-afiliado';
+          resultado.textContent = '❌ No se encontró afiliado con ese DNI.';
+          resultado.className = 'no-afiliado';
         }
       } catch (error) {
-        resultadoDiv.textContent = '⚠️ ERROR AL CONECTAR CON EL SERVIDOR.';
-        resultadoDiv.className = 'error';
+        resultado.textContent = '⚠️ Error al conectar con el servidor.';
+        resultado.className = 'error';
         console.error(error);
       }
     });
