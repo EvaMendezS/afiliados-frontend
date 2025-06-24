@@ -50,7 +50,7 @@
       border-radius: 5px;
       font-weight: bold;
       text-align: center;
-      min-height: 40px;
+      font-size: 1.2em;
     }
     #resultado.afiliado {
       background-color: #d4edda;
@@ -97,12 +97,9 @@
       const nombre = document.getElementById('nombre').value.trim().toLowerCase();
       const apellido = document.getElementById('apellido').value.trim().toLowerCase();
 
-      resultadoDiv.textContent = '';
-      resultadoDiv.className = '';
-
       if (!dni || !nombre || !apellido) {
         resultadoDiv.textContent = 'Por favor completá todos los campos.';
-        resultadoDiv.classList.add('error');
+        resultadoDiv.className = 'error';
         return;
       }
 
@@ -110,21 +107,21 @@
         const response = await fetch('https://afiliados-verificacion-production.up.railway.app/verificar', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ dni, nombre, apellido }),
+          body: JSON.stringify({ dni, nombre, apellido })
         });
 
         const data = await response.json();
 
         if (data.afiliado) {
-          resultadoDiv.textContent = `✅ Afiliado encontrado: ${data.datos.nombre} ${data.datos.apellido}`;
-          resultadoDiv.classList.add('afiliado');
+          resultadoDiv.textContent = `✅ AFILIADO ENCONTRADO: ${data.datos.nombre} ${data.datos.apellido}`;
+          resultadoDiv.className = 'afiliado';
         } else {
-          resultadoDiv.textContent = '❌ No se encontró afiliado con esos datos.';
-          resultadoDiv.classList.add('no-afiliado');
+          resultadoDiv.textContent = '❌ AFILIADO NO ENCONTRADO';
+          resultadoDiv.className = 'no-afiliado';
         }
       } catch (error) {
-        resultadoDiv.textContent = '⚠️ Error al conectar con el servidor.';
-        resultadoDiv.classList.add('error');
+        resultadoDiv.textContent = '⚠️ ERROR AL CONECTAR CON EL SERVIDOR.';
+        resultadoDiv.className = 'error';
         console.error(error);
       }
     });
