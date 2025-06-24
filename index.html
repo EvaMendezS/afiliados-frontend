@@ -44,6 +44,28 @@
     button:hover {
       background-color: #0056b3;
     }
+    #resultado {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 5px;
+      font-weight: bold;
+      text-align: center;
+    }
+    #resultado.afiliado {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    #resultado.no-afiliado {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    #resultado.error {
+      background-color: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffeeba;
+    }
   </style>
 </head>
 <body>
@@ -61,18 +83,25 @@
     <button type="submit">Verificar</button>
   </form>
 
+  <div id="resultado"></div>
+
   <script>
     const form = document.getElementById('formulario');
+    const resultado = document.getElementById('resultado');
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
+
+      resultado.textContent = '';
+      resultado.className = '';
 
       const dni = document.getElementById('dni').value.trim();
       const nombre = document.getElementById('nombre').value.trim();
       const apellido = document.getElementById('apellido').value.trim();
 
       if (!dni || !nombre || !apellido) {
-        alert('Por favor completá todos los campos.');
+        resultado.textContent = 'Por favor completá todos los campos.';
+        resultado.classList.add('error');
         return;
       }
 
@@ -88,12 +117,15 @@
         const data = await response.json();
 
         if (data.afiliado) {
-          alert(`✅ Afiliado encontrado:\n${data.datos.nombre} ${data.datos.apellido}`);
+          resultado.textContent = `Afiliado encontrado: ${data.datos.nombre} ${data.datos.apellido}`;
+          resultado.classList.add('afiliado');
         } else {
-          alert('❌ No se encontró afiliado con esos datos.');
+          resultado.textContent = 'No se encontró afiliado con esos datos.';
+          resultado.classList.add('no-afiliado');
         }
       } catch (error) {
-        alert('⚠️ Error al conectar con el servidor.');
+        resultado.textContent = 'Error al conectar con el servidor.';
+        resultado.classList.add('error');
         console.error(error);
       }
     });
