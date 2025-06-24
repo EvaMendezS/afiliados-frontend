@@ -88,12 +88,12 @@
         const data = await response.json();
 
         if (data.afiliado) {
-          alert(Afiliado encontrado: ${data.datos.nombre} ${data.datos.apellido});
+          alert(`✅ Afiliado encontrado:\n${data.datos.nombre} ${data.datos.apellido}`);
         } else {
-          alert('No se encontró afiliado con esos datos.');
+          alert('❌ No se encontró afiliado con esos datos.');
         }
       } catch (error) {
-        alert('Error al conectar con el servidor.');
+        alert('⚠️ Error al conectar con el servidor.');
         console.error(error);
       }
     });
