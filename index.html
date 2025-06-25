@@ -102,7 +102,13 @@
         const data = await response.json();
 
         if (data.afiliado) {
-          resultadoDiv.textContent = `✅ AFILIADO: ${data.nombre} ${data.apellido} (N° ${data.numero_afiliado})`;
+          // Separar nombre y apellido del campo nombre_completo
+          const nombreCompleto = data.datos.nombre_completo || '';
+          const partes = nombreCompleto.split(',');
+          const apellido = partes[0] ? partes[0].trim() : '';
+          const nombre = partes[1] ? partes[1].trim() : '';
+
+          resultadoDiv.textContent = `✅ AFILIADO: ${nombre} ${apellido} (N° ${data.datos.nro_afiliado})`;
           resultadoDiv.className = 'afiliado';
         } else {
           resultadoDiv.textContent = '❌ No se encontró afiliado con ese DNI.';
