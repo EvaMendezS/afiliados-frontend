@@ -26,6 +26,7 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      align-items: center;
       position: relative;
     }
 
@@ -89,16 +90,17 @@
     }
 
     .logo-bottom {
-      text-align: center;
-      margin-top: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-grow: 1;
+      width: 100%;
     }
 
     .logo-bottom img {
-      max-height: 130px;
-      height: 130px;
+      max-height: 160px;
       width: auto;
-      display: block;
-      margin: 0 auto;
+      object-fit: contain;
     }
   </style>
 </head>
