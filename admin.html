@@ -92,6 +92,10 @@
         font-size: 20px;
         padding: 15px;
       }
+      .contenedor {
+        flex-direction: column;
+        padding: 10px;
+      }
       .columna {
         padding: 15px;
       }
@@ -172,7 +176,7 @@ document.getElementById('formAgregar').addEventListener('submit', async (e) => {
     const res = await fetch(`${urlBase}/admin/cargar-afiliados`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ afiliados: [{ nro_afiliado, nombre_completo, dni }] })
+      body: JSON.stringify({ nro_afiliado, nombre_completo, dni })
     });
     const data = await res.json();
     if (data.success) {
@@ -271,5 +275,4 @@ cargarLogs();
 
 </body>
 </html>
-
 
