@@ -137,11 +137,18 @@
       background-color: #007700;
       color: white;
       border: none;
-      border-radius: 6px;
-      padding: 10px 20px;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
       font-size: 16px;
+      font-weight: bold;
       cursor: pointer;
       z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      line-height: 1;
     }
     #btnAdmin:hover {
       background-color: #005500;
@@ -150,7 +157,7 @@
 </head>
 <body>
 
-  <button id="btnAdmin" title="Panel de Administración">ADMIN</button>
+  <button id="btnAdmin" title="Panel de Administración">A</button>
 
   <div class="contenedor">
     <div>
@@ -177,7 +184,8 @@
     const btnAdmin = document.getElementById('btnAdmin');
     let dniAfiliado = '';
 
-    const urlBase = 'https://afiliados-verificacion-production.up.railway.app'; // Cambia por tu URL backend o localhost
+    // Cambia por tu URL backend o localhost
+    const urlBase = 'https://afiliados-verificacion-production.up.railway.app';
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -239,7 +247,6 @@
       const pin = prompt('Ingrese PIN de administrador:');
       if (!pin) return;
 
-      // Cambiá este PIN a lo que quieras
       const PIN_CORRECTO = '1234';
 
       if (pin === PIN_CORRECTO) {
@@ -251,4 +258,3 @@
   </script>
 </body>
 </html>
-

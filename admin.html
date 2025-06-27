@@ -3,33 +3,23 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Panel Admin - Afiliados</title>
+  <title>Panel Admin Afiliados</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #e6e6e6;
-      margin: 0;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      position: relative;
+      margin: 20px 40px;
+      background-color: #f0f0f0;
     }
-    h1 {
+    h2 {
       color: #003366;
-      margin-bottom: 20px;
-    }
-    .contenedor {
-      background: white;
-      border-radius: 12px;
-      padding: 20px 30px;
-      width: 600px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.1);
-      margin-bottom: 30px;
+      margin-bottom: 5px;
     }
     form {
+      background: white;
+      padding: 15px 20px;
       margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px #ccc;
     }
     label {
       display: block;
@@ -39,11 +29,11 @@
     input {
       width: 100%;
       padding: 8px;
-      margin-top: 4px;
-      font-size: 16px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
+      margin-top: 5px;
       box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 16px;
     }
     button {
       margin-top: 15px;
@@ -52,8 +42,8 @@
       color: white;
       border: none;
       border-radius: 6px;
-      font-size: 16px;
       cursor: pointer;
+      font-size: 16px;
       width: 100%;
     }
     button:hover {
@@ -65,217 +55,236 @@
       min-height: 24px;
       color: green;
       text-align: center;
+      font-size: 18px;
+      transition: opacity 0.3s ease;
+      opacity: 0;
     }
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 10px;
+      margin-top: 30px;
+      background: white;
+      box-shadow: 0 0 10px #ccc;
+      border-radius: 8px;
+      overflow: hidden;
     }
     th, td {
-      border: 1px solid #ccc;
-      padding: 6px 8px;
+      padding: 12px 15px;
+      border-bottom: 1px solid #ddd;
       text-align: left;
+      font-size: 15px;
     }
     th {
       background-color: #003366;
       color: white;
+      font-weight: bold;
+    }
+    #logs {
+      margin-top: 40px;
+    }
+    #logs table {
+      font-size: 14px;
     }
   </style>
 </head>
 <body>
 
-  <h1>Panel de Administración - Afiliados</h1>
+  <h1>Panel de Administración</h1>
 
-  <div class="contenedor">
-    <h2>Agregar Afiliado</h2>
-    <form id="formAgregar">
-      <label for="nroAgregar">N° Afiliado</label>
-      <input type="text" id="nroAgregar" name="nro_afiliado" required />
+  <form id="formAgregar">
+    <h2>Agregar Afiliados (Carga múltiple CSV)</h2>
+    <label for="csvText">Pegue CSV (nro_afiliado,nombre_completo,dni) una línea por afiliado</label>
+    <textarea id="csvText" rows="5" style="width: 100%; font-family: monospace; font-size: 14px;"></textarea>
+    <button type="submit">Agregar Afiliados</button>
+  </form>
 
-      <label for="nombreAgregar">Nombre Completo (Apellido, Nombre)</label>
-      <input type="text" id="nombreAgregar" name="nombre_completo" required />
-
-      <label for="dniAgregar">DNI</label>
-      <input type="text" id="dniAgregar" name="dni" required />
-
-      <button type="submit">Agregar Afiliado</button>
-    </form>
-  </div>
-
-  <div class="contenedor">
+  <form id="formEditar">
     <h2>Editar Afiliado</h2>
-    <form id="formEditar">
-      <label for="dniEditar">DNI del Afiliado a Editar</label>
-      <input type="text" id="dniEditar" name="dni" required />
+    <label for="editNroAfiliado">N° Afiliado</label>
+    <input type="text" id="editNroAfiliado" required />
+    <label for="editNombreCompleto">Nombre Completo (Apellido, Nombre)</label>
+    <input type="text" id="editNombreCompleto" required />
+    <label for="editDni">DNI (para buscar)</label>
+    <input type="text" id="editDni" required />
+    <button type="submit">Editar Afiliado</button>
+  </form>
 
-      <label for="nuevoNroEditar">Nuevo N° Afiliado</label>
-      <input type="text" id="nuevoNroEditar" name="nuevoNro" required />
-
-      <label for="nuevoNombreEditar">Nuevo Nombre Completo (Apellido, Nombre)</label>
-      <input type="text" id="nuevoNombreEditar" name="nuevoNombre" required />
-
-      <button type="submit">Editar Afiliado</button>
-    </form>
-  </div>
-
-  <div class="contenedor">
+  <form id="formEliminar">
     <h2>Eliminar Afiliado</h2>
-    <form id="formEliminar">
-      <label for="dniEliminar">DNI del Afiliado a Eliminar</label>
-      <input type="text" id="dniEliminar" name="dni" required />
-      <button type="submit">Eliminar Afiliado</button>
-    </form>
-  </div>
-
-  <div class="contenedor">
-    <h2>Listado de Afiliados</h2>
-    <table id="tablaAfiliados">
-      <thead>
-        <tr>
-          <th>N° Afiliado</th>
-          <th>Nombre Completo</th>
-          <th>DNI</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Filas generadas dinámicamente -->
-      </tbody>
-    </table>
-  </div>
+    <label for="delDni">DNI</label>
+    <input type="text" id="delDni" required />
+    <button type="submit">Eliminar Afiliado</button>
+  </form>
 
   <div id="mensaje"></div>
 
-</body>
+  <h2>Listado de Afiliados</h2>
+  <table id="tablaAfiliados">
+    <thead>
+      <tr><th>N° Afiliado</th><th>Nombre Completo</th><th>DNI</th></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <h2 id="logs">Logs de Cambios (últimos 20)</h2>
+  <table id="tablaLogs">
+    <thead>
+      <tr><th>Acción</th><th>DNI</th><th>Fecha</th></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 
 <script>
-  const urlBase = 'https://afiliados-verificacion-production.up.railway.app'; // Cambia a tu backend
+  const urlBase = 'https://afiliados-verificacion-production.up.railway.app';
 
+  const formAgregar = document.getElementById('formAgregar');
+  const formEditar = document.getElementById('formEditar');
+  const formEliminar = document.getElementById('formEliminar');
   const mensajeDiv = document.getElementById('mensaje');
+  const tablaAfiliadosBody = document.querySelector('#tablaAfiliados tbody');
+  const tablaLogsBody = document.querySelector('#tablaLogs tbody');
 
   function mostrarMensaje(texto, esError = false) {
     mensajeDiv.textContent = texto;
     mensajeDiv.style.color = esError ? 'red' : 'green';
+    mensajeDiv.style.opacity = '1';
     setTimeout(() => {
-      mensajeDiv.textContent = '';
+      mensajeDiv.style.opacity = '0';
     }, 4000);
   }
 
   async function cargarAfiliados() {
     try {
-      const res = await fetch(`${urlBase}/listar-afiliados`);
-      const data = await res.json();
-      const tbody = document.querySelector('#tablaAfiliados tbody');
-      tbody.innerHTML = '';
-      data.forEach(afiliado => {
+      const res = await fetch(`${urlBase}/admin/listar-afiliados`);
+      const afiliados = await res.json();
+      tablaAfiliadosBody.innerHTML = '';
+      afiliados.forEach(a => {
         const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${afiliado.nro_afiliado}</td>
-          <td>${afiliado.nombre_completo}</td>
-          <td>${afiliado.dni}</td>
-        `;
-        tbody.appendChild(tr);
+        tr.innerHTML = `<td>${a.nro_afiliado}</td><td>${a.nombre_completo}</td><td>${a.dni}</td>`;
+        tablaAfiliadosBody.appendChild(tr);
       });
-    } catch (error) {
-      mostrarMensaje('Error cargando afiliados', true);
-      console.error(error);
+    } catch {
+      tablaAfiliadosBody.innerHTML = '<tr><td colspan="3">Error cargando afiliados</td></tr>';
     }
   }
 
-  // Agregar afiliado
-  document.getElementById('formAgregar').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const nro_afiliado = document.getElementById('nroAgregar').value.trim();
-    const nombre_completo = document.getElementById('nombreAgregar').value.trim();
-    const dni = document.getElementById('dniAgregar').value.trim();
+  async function cargarLogs() {
+    try {
+      const res = await fetch(`${urlBase}/admin/listar-logs`);
+      const logs = await res.json();
+      tablaLogsBody.innerHTML = '';
+      logs.forEach(l => {
+        const tr = document.createElement('tr');
+        const fecha = new Date(l.fecha).toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' });
+        tr.innerHTML = `<td>${l.accion}</td><td>${l.dni}</td><td>${fecha}</td>`;
+        tablaLogsBody.appendChild(tr);
+      });
+    } catch {
+      tablaLogsBody.innerHTML = '<tr><td colspan="3">Error cargando logs</td></tr>';
+    }
+  }
 
-    if (!nro_afiliado || !nombre_completo || !dni) {
-      mostrarMensaje('Completa todos los campos', true);
+  formAgregar.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const csvText = document.getElementById('csvText').value.trim();
+    if (!csvText) {
+      mostrarMensaje('Ingrese datos CSV para agregar', true);
       return;
     }
-
+    // Parsear CSV simple
+    const lineas = csvText.split('\n');
+    const afiliados = [];
+    for (const linea of lineas) {
+      const partes = linea.split(',');
+      if (partes.length !== 3) continue;
+      const [nro_afiliado, nombre_completo, dni] = partes.map(s => s.trim());
+      afiliados.push({ nro_afiliado, nombre_completo, dni });
+    }
+    if (afiliados.length === 0) {
+      mostrarMensaje('No hay afiliados válidos en CSV', true);
+      return;
+    }
     try {
-      const res = await fetch(`${urlBase}/agregar-afiliado`, {
+      const res = await fetch(`${urlBase}/admin/cargar-afiliados`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ afiliados })
+      });
+      const data = await res.json();
+      if (data.success) {
+        mostrarMensaje('Afiliados agregados correctamente');
+        document.getElementById('csvText').value = '';
+        cargarAfiliados();
+        cargarLogs();
+      } else {
+        mostrarMensaje(data.error || 'Error al agregar afiliados', true);
+      }
+    } catch {
+      mostrarMensaje('Error al conectar con el servidor', true);
+    }
+  });
+
+  formEditar.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const nro_afiliado = document.getElementById('editNroAfiliado').value.trim();
+    const nombre_completo = document.getElementById('editNombreCompleto').value.trim();
+    const dni = document.getElementById('editDni').value.trim();
+    if (!nro_afiliado || !nombre_completo || !dni) {
+      mostrarMensaje('Complete todos los campos para editar', true);
+      return;
+    }
+    try {
+      const res = await fetch(`${urlBase}/admin/editar-afiliado`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nro_afiliado, nombre_completo, dni })
       });
       const data = await res.json();
-      if (res.ok) {
-        mostrarMensaje('Afiliado agregado correctamente');
-        e.target.reset();
-        cargarAfiliados();
-      } else {
-        mostrarMensaje(data.error || 'Error agregando afiliado', true);
-      }
-    } catch (error) {
-      mostrarMensaje('Error en la conexión', true);
-      console.error(error);
-    }
-  });
-
-  // Editar afiliado
-  document.getElementById('formEditar').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const dni = document.getElementById('dniEditar').value.trim();
-    const nuevoNro = document.getElementById('nuevoNroEditar').value.trim();
-    const nuevoNombre = document.getElementById('nuevoNombreEditar').value.trim();
-
-    if (!dni || !nuevoNro || !nuevoNombre) {
-      mostrarMensaje('Completa todos los campos para editar', true);
-      return;
-    }
-
-    try {
-      const res = await fetch(`${urlBase}/editar-afiliado`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ dni, nuevoNro, nuevoNombre })
-      });
-      const data = await res.json();
-      if (res.ok) {
+      if (data.success) {
         mostrarMensaje('Afiliado modificado correctamente');
-        e.target.reset();
         cargarAfiliados();
+        cargarLogs();
+        formEditar.reset();
       } else {
-        mostrarMensaje(data.error || 'Error editando afiliado', true);
+        mostrarMensaje(data.error || 'Error al editar afiliado', true);
       }
-    } catch (error) {
-      mostrarMensaje('Error en la conexión', true);
-      console.error(error);
+    } catch {
+      mostrarMensaje('Error al conectar con el servidor', true);
     }
   });
 
-  // Eliminar afiliado
-  document.getElementById('formEliminar').addEventListener('submit', async (e) => {
+  formEliminar.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const dni = document.getElementById('dniEliminar').value.trim();
-
+    const dni = document.getElementById('delDni').value.trim();
     if (!dni) {
-      mostrarMensaje('Ingresa DNI para eliminar', true);
+      mostrarMensaje('Ingrese DNI para eliminar', true);
       return;
     }
-
     try {
-      const res = await fetch(`${urlBase}/eliminar-afiliado`, {
+      const res = await fetch(`${urlBase}/admin/eliminar-afiliado`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ dni })
       });
       const data = await res.json();
-      if (res.ok) {
+      if (data.success) {
         mostrarMensaje('Afiliado eliminado correctamente');
-        e.target.reset();
         cargarAfiliados();
+        cargarLogs();
+        formEliminar.reset();
       } else {
-        mostrarMensaje(data.error || 'Error eliminando afiliado', true);
+        mostrarMensaje(data.error || 'Error al eliminar afiliado', true);
       }
-    } catch (error) {
-      mostrarMensaje('Error en la conexión', true);
-      console.error(error);
+    } catch {
+      mostrarMensaje('Error al conectar con el servidor', true);
     }
   });
 
   // Carga inicial
   cargarAfiliados();
+  cargarLogs();
 </script>
+
+</body>
 </html>
+
