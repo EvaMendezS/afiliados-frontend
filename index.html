@@ -230,6 +230,9 @@
   </div>
 
   <script>
+    // Cambiá esta URL según donde esté tu backend
+    const API_BASE_URL = 'https://upgraded-goggles-wp99g5gqqj72pgj-8080.app.github.dev';
+
     const adminToggleBtn = document.getElementById('admin-toggle');
     const adminPanelContainer = document.getElementById('admin-panel-container');
     const pinSection = document.getElementById('pin-section');
@@ -258,10 +261,9 @@
       }
     });
 
-    // Función para cargar afiliados
     async function cargarAfiliados() {
       try {
-        const res = await fetch('http://localhost:8080/afiliados/listado');
+        const res = await fetch(`${API_BASE_URL}/afiliados/listado`);
         if (!res.ok) throw new Error('No se pudo cargar');
         const afiliados = await res.json();
         const tbody = document.getElementById('tabla-afiliados');
@@ -281,7 +283,6 @@
       }
     }
 
-    // El resto del código para verificar, descargar y admin sigue igual
     const formVerificar = document.getElementById('formulario-verificar');
     const resultadoDiv = document.getElementById('resultado');
     const descargarBtn = document.getElementById('descargar');
@@ -296,7 +297,7 @@
       resultadoDiv.className = '';
 
       try {
-        const response = await fetch('http://localhost:8080/verificar', {
+        const response = await fetch(`${API_BASE_URL}/verificar`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ dni })
@@ -327,7 +328,7 @@
       if (!ultimoDni) return;
 
       try {
-        const response = await fetch('http://localhost:8080/credencial', {
+        const response = await fetch(`${API_BASE_URL}/credencial`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ dni: ultimoDni })
@@ -343,7 +344,7 @@
       }
     });
 
-    // Formularios de agregar, editar y eliminar
+    // Formulario Agregar
     document.getElementById('form-agregar').addEventListener('submit', async e => {
       e.preventDefault();
       const nro_afiliado = document.getElementById('nro_afiliado_agregar').value.trim();
@@ -351,7 +352,7 @@
       const nombre_completo = document.getElementById('nombre_completo_agregar').value.trim();
 
       try {
-        const res = await fetch('http://localhost:8080/afiliados/agregar', {
+        const res = await fetch(`${API_BASE_URL}/afiliados/agregar`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ nro_afiliado, dni, nombre_completo })
@@ -369,6 +370,7 @@
       }
     });
 
+    // Formulario Editar
     document.getElementById('form-editar').addEventListener('submit', async e => {
       e.preventDefault();
       const dni = document.getElementById('dni_editar').value.trim();
@@ -376,7 +378,7 @@
       const nuevo_nombre_completo = document.getElementById('nuevo_nombre_completo').value.trim();
 
       try {
-        const res = await fetch('http://localhost:8080/afiliados/editar', {
+        const res = await fetch(`${API_BASE_URL}/afiliados/editar`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ dni, nuevo_nro_afiliado, nuevo_nombre_completo })
@@ -394,12 +396,13 @@
       }
     });
 
+    // Formulario Eliminar
     document.getElementById('form-eliminar').addEventListener('submit', async e => {
       e.preventDefault();
       const dni = document.getElementById('dni_eliminar').value.trim();
 
       try {
-        const res = await fetch('http://localhost:8080/afiliados/eliminar', {
+        const res = await fetch(`${API_BASE_URL}/afiliados/eliminar`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ dni })
@@ -419,4 +422,3 @@
   </script>
 </body>
 </html>
-
