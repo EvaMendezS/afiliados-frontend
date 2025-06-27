@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Panel Admin - Afiliados</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #e6e6e6;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+    h1 {
+      color: #003366;
+      margin-bottom: 20px;
+    }
+    .contenedor {
+      background: white;
+      border-radius: 12px;
+      padding: 20px 30px;
+      width: 600px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+    }
+    form {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 4px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+    button {
+      margin-top: 15px;
+      padding: 12px;
+      background-color: #003366;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      width: 100%;
+    }
+    button:hover {
+      background-color: #0055aa;
+    }
+    #mensaje {
+      margin-top: 10px;
+      font-weight: bold;
+      min-height: 24px;
+      color: green;
+      text-align: center;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 6px 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #003366;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Panel de Administración - Afiliados</h1>
+
+  <div class="contenedor">
+    <h2>Agregar Afiliado</h2>
+    <form id="formAgregar">
+      <label for="nroAgregar">N° Afiliado</label>
+      <input type="text" id="nroAgregar" name="nro_afiliado" required />
+
+      <label for="nombreAgregar">Nombre Completo (Apellido, Nombre)</label>
+      <input type="text" id="nombreAgregar" name="nombre_completo" required />
+
+      <label for="dniAgregar">DNI</label>
+      <input type="text" id="dniAgregar" name="dni" required />
+
+      <button type="submit">Agregar Afiliado</button>
+    </form>
+  </div>
+
+  <div class="contenedor">
+    <h2>Editar Afiliado</h2>
+    <form id="formEditar">
+      <label for="dniEditar">DNI del Afiliado a Editar</label>
+      <input type="text" id="dniEditar" name="dni" required />
+
+      <label for="nuevoNroEditar">Nuevo N° Afiliado</label>
+      <input type="text" id="nuevoNroEditar" name="nuevoNro" required />
+
+      <label for="nuevoNombreEditar">Nuevo Nombre Completo (Apellido, Nombre)</label>
+      <input type="text" id="nuevoNombreEditar" name="nuevoNombre" required />
+
+      <button type="submit">Editar Afiliado</button>
+    </form>
+  </div>
+
+  <div class="contenedor">
+    <h2>Eliminar Afiliado</h2>
+    <form id="formEliminar">
+      <label for="dniEliminar">DNI del Afiliado a Eliminar</label>
+      <input type="text" id="dniEliminar" name="dni" required />
+      <button type="submit">Eliminar Afiliado</button>
+    </form>
+  </div>
+
+  <div class="contenedor">
+    <h2>Listado de Afiliados</h2>
+    <table id="tablaAfiliados">
+      <thead>
+        <tr>
+          <th>N° Afiliado</th>
+          <th>Nombre Completo</th>
+          <th>DNI</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Filas generadas dinámicamente -->
+      </tbody>
+    </table>
+  </div>
+
+  <div id="mensaje"></div>
+
+<script>
+  const urlBase = 'https://afiliados-verificacion-production.up.railway.app'; // Cambia por tu URL backend si es local cambia a localhost:8080
+
+  const mensajeDiv = document.getElementById('mensaje');
+
+  // Función para mostrar mensaje temporal
+  function mostrarMensaje(texto, esError = false) {
+    mensajeDiv.textContent = texto;
+    mensajeDiv.style.color = esError ? 'red' : 'green';
+    setTimeout(() => {
+      mensajeDiv.textContent = '';
+    }, 4000);
+  }
+
+  // Cargar listado afiliados
+  async function cargarAfiliados() {
+    try {
+      const res = await fetch(`${urlBase}/listar-afiliados`);
+      const data = await res.json();
+
+      const tbody = document.querySelector('#tablaAfiliados tbody');
+      tbody.innerHTML = '';
+
+      data.forEach(afiliado => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${afiliado.nro_afiliado}</td>
+          <td>${afiliado.nombre_completo}</td>
+          <td>${afiliado.dni}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    } catch (error) {
+      mostrarMensaje('Error cargando afiliados', true);
+      console.error(error);
+    }
+  }
+
+  // Formulario Agregar Afiliado
+  document.getElementById('formAgregar').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const nro_afiliado = document.getElementById('nroAgregar').value.trim();
+    const nombre_completo = document.getElementById('nombreAgregar').value.trim();
+    const dni = document.getElementById('dniAgregar').value.trim();
+
+    if (!nro_afiliado || !nombre_completo || !dni) {
+      mostrarMensaje('Completa todos los campos', true);
+      return;
+    }
+
+    try {
+      const res = await fetch(`${urlBase}/agregar-afiliado`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nro_afiliado, nombre_completo, dni })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        mostrarMensaje(data.mensaje);
+        e.target.reset();
+        cargarAfiliados();
+      } else {
+        mostrarMensaje(data.error || 'Error agregando afiliado', true);
+      }
+    } catch (error) {
+      mostrarMensaje('Error en la conexión', true);
+      console.error(error);
+    }
+  });
+
+  // Formulario Editar Afiliado
+  document.getElementById('formEditar').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const dni = document.getElementById('dniEditar').value.trim();
+    const nuevoNro = document.getElementById('nuevoNroEditar').value.trim();
+    const nuevoNombre = document.getElementById('nuevoNombreEditar').value.trim();
+
+    if (!dni || !nuevoNro || !nuevoNombre) {
+      mostrarMensaje('Completa todos los campos para editar', true);
+      return;
+    }
+
+    try {
+      const res = await fetch(`${urlBase}/editar-afiliado`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ dni, nuevoNro, nuevoNombre })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        mostrarMensaje(data.mensaje);
+        e.target.reset();
+        cargarAfiliados();
+      } else {
+        mostrarMensaje(data.error || 'Error editando afiliado', true);
+      }
+    } catch (error) {
+      mostrarMensaje('Error en la conexión', true);
+      console.error(error);
+    }
+  });
+
+  // Formulario Eliminar Afiliado
+  document.getElementById('formEliminar').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const dni = document.getElementById('dniEliminar').value.trim();
+
+    if (!dni) {
+      mostrarMensaje('Ingresa DNI para eliminar', true);
+      return;
+    }
+
+    try {
+      const res = await fetch(`${urlBase}/eliminar-afiliado`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ dni })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        mostrarMensaje(data.mensaje);
+        e.target.reset();
+        cargarAfiliados();
+      } else {
+        mostrarMensaje(data.error || 'Error eliminando afiliado', true);
+      }
+    } catch (error) {
+      mostrarMensaje('Error en la conexión', true);
+      console.error(error);
+    }
+  });
+
+  // Cargar listado inicial
+  cargarAfiliados();
+</script>
+
+</body>
+</html>
