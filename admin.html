@@ -14,6 +14,7 @@
       flex-direction: column;
       align-items: center;
       min-height: 100vh;
+      position: relative;
     }
     h1 {
       color: #003366;
@@ -144,12 +145,13 @@
 
   <div id="mensaje"></div>
 
+</body>
+
 <script>
-  const urlBase = 'https://afiliados-verificacion-production.up.railway.app'; // Cambia por tu URL backend si es local cambia a localhost:8080
+  const urlBase = 'https://afiliados-verificacion-production.up.railway.app'; // Cambia a tu backend
 
   const mensajeDiv = document.getElementById('mensaje');
 
-  // Función para mostrar mensaje temporal
   function mostrarMensaje(texto, esError = false) {
     mensajeDiv.textContent = texto;
     mensajeDiv.style.color = esError ? 'red' : 'green';
@@ -158,15 +160,12 @@
     }, 4000);
   }
 
-  // Cargar listado afiliados
   async function cargarAfiliados() {
     try {
       const res = await fetch(`${urlBase}/listar-afiliados`);
       const data = await res.json();
-
       const tbody = document.querySelector('#tablaAfiliados tbody');
       tbody.innerHTML = '';
-
       data.forEach(afiliado => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
@@ -182,7 +181,7 @@
     }
   }
 
-  // Formulario Agregar Afiliado
+  // Agregar afiliado
   document.getElementById('formAgregar').addEventListener('submit', async (e) => {
     e.preventDefault();
     const nro_afiliado = document.getElementById('nroAgregar').value.trim();
@@ -202,7 +201,7 @@
       });
       const data = await res.json();
       if (res.ok) {
-        mostrarMensaje(data.mensaje);
+        mostrarMensaje('Afiliado agregado correctamente');
         e.target.reset();
         cargarAfiliados();
       } else {
@@ -214,7 +213,7 @@
     }
   });
 
-  // Formulario Editar Afiliado
+  // Editar afiliado
   document.getElementById('formEditar').addEventListener('submit', async (e) => {
     e.preventDefault();
     const dni = document.getElementById('dniEditar').value.trim();
@@ -234,7 +233,7 @@
       });
       const data = await res.json();
       if (res.ok) {
-        mostrarMensaje(data.mensaje);
+        mostrarMensaje('Afiliado modificado correctamente');
         e.target.reset();
         cargarAfiliados();
       } else {
@@ -246,7 +245,7 @@
     }
   });
 
-  // Formulario Eliminar Afiliado
+  // Eliminar afiliado
   document.getElementById('formEliminar').addEventListener('submit', async (e) => {
     e.preventDefault();
     const dni = document.getElementById('dniEliminar').value.trim();
@@ -264,7 +263,7 @@
       });
       const data = await res.json();
       if (res.ok) {
-        mostrarMensaje(data.mensaje);
+        mostrarMensaje('Afiliado eliminado correctamente');
         e.target.reset();
         cargarAfiliados();
       } else {
@@ -276,9 +275,7 @@
     }
   });
 
-  // Cargar listado inicial
+  // Carga inicial
   cargarAfiliados();
 </script>
-
-</body>
 </html>

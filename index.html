@@ -129,17 +129,19 @@
       }
     }
 
-    /* Botón admin extra */
+    /* Botón admin fijo fuera del contenedor */
     #btnAdmin {
+      position: fixed;
+      top: 15px;
+      right: 15px;
       background-color: #007700;
-      margin-top: 10px;
-      width: auto;
+      color: white;
+      border: none;
+      border-radius: 6px;
       padding: 10px 20px;
       font-size: 16px;
-      border-radius: 6px;
-      border: none;
       cursor: pointer;
-      color: white;
+      z-index: 1000;
     }
     #btnAdmin:hover {
       background-color: #005500;
@@ -147,6 +149,9 @@
   </style>
 </head>
 <body>
+
+  <button id="btnAdmin" title="Panel de Administración">ADMIN</button>
+
   <div class="contenedor">
     <div>
       <h1>Verificación de Afiliados</h1>
@@ -158,8 +163,6 @@
 
       <div id="resultado"></div>
       <button id="descargar" style="display: none;">Ver Credencial</button>
-
-      <button id="btnAdmin">ADMIN</button>
     </div>
 
     <div class="logo-bottom">
@@ -240,7 +243,6 @@
       const PIN_CORRECTO = '1234';
 
       if (pin === PIN_CORRECTO) {
-        // Asumo que admin.html está en la misma carpeta
         window.open('admin.html', '_blank');
       } else {
         alert('PIN incorrecto');
@@ -249,3 +251,4 @@
   </script>
 </body>
 </html>
+
