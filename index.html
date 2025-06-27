@@ -10,6 +10,8 @@
       margin: 0;
       padding: 40px;
       background-color: #f2f2f2;
+      position: relative;
+      min-height: 100vh;
     }
 
     .contenedor {
@@ -87,14 +89,34 @@
       height: auto;
     }
 
-    /* Sección administración */
-    #admin-access, #admin-panel {
-      max-width: 600px;
-      margin: 30px auto;
-      padding: 20px;
+    /* Botón admin esquina superior derecha */
+    #admin-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: #003366;
+      border: none;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 1000;
+      font-weight: bold;
+    }
+
+    #admin-panel-container {
+      max-width: 900px;
+      margin: 20px auto;
       background: #e9e9e9;
       border-radius: 10px;
       box-shadow: 0 0 8px rgba(0,0,0,0.1);
+      padding: 20px;
+      display: none;
+    }
+
+    #pin-section {
+      max-width: 400px;
+      margin: 0 auto 20px auto;
     }
 
     #admin-panel {
@@ -104,12 +126,13 @@
     /* Tabla listado afiliados */
     #listado-afiliados {
       max-width: 900px;
-      margin: 40px auto;
+      margin: 40px auto 0 auto;
       padding: 20px;
       background: #fff;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
       overflow-x: auto;
+      display: none;
     }
 
     #listado-afiliados table {
@@ -130,6 +153,8 @@
   </style>
 </head>
 <body>
+  <button id="admin-toggle">Admin</button>
+
   <div class="contenedor">
     <h1>Verificación de Afiliados</h1>
     <form id="formulario-verificar">
@@ -147,49 +172,47 @@
     </div>
   </div>
 
-  <div id="admin-access" class="contenedor">
-    <h2>Acceso Administrativo</h2>
-    <form id="form-pin">
-      <label for="admin-pin">Ingrese PIN</label>
-      <input type="password" id="admin-pin" required />
-      <button type="submit">Ingresar</button>
-    </form>
-  </div>
+  <div id="admin-panel-container">
+    <div id="pin-section">
+      <form id="form-pin">
+        <label for="admin-pin">Ingrese PIN</label>
+        <input type="password" id="admin-pin" required />
+        <button type="submit">Ingresar</button>
+      </form>
+    </div>
 
-  <div id="admin-panel" class="contenedor">
-    <h2>Panel de Administración</h2>
+    <div id="admin-panel">
+      <h2>Panel de Administración</h2>
 
-    <!-- Agregar afiliado -->
-    <form id="form-agregar">
-      <h3>Agregar Afiliado</h3>
-      <label for="nro_afiliado_agregar">N° Afiliado</label>
-      <input type="number" id="nro_afiliado_agregar" required />
-      <label for="dni_agregar">DNI</label>
-      <input type="text" id="dni_agregar" required />
-      <label for="nombre_completo_agregar">Nombre Completo (Apellido, Nombre)</label>
-      <input type="text" id="nombre_completo_agregar" required />
-      <button type="submit">Agregar</button>
-    </form>
+      <form id="form-agregar">
+        <h3>Agregar Afiliado</h3>
+        <label for="nro_afiliado_agregar">N° Afiliado</label>
+        <input type="number" id="nro_afiliado_agregar" required />
+        <label for="dni_agregar">DNI</label>
+        <input type="text" id="dni_agregar" required />
+        <label for="nombre_completo_agregar">Nombre Completo (Apellido, Nombre)</label>
+        <input type="text" id="nombre_completo_agregar" required />
+        <button type="submit">Agregar</button>
+      </form>
 
-    <!-- Editar afiliado -->
-    <form id="form-editar" style="margin-top: 30px;">
-      <h3>Editar Afiliado</h3>
-      <label for="dni_editar">DNI a modificar</label>
-      <input type="text" id="dni_editar" required />
-      <label for="nuevo_nro_afiliado">Nuevo N° Afiliado</label>
-      <input type="number" id="nuevo_nro_afiliado" required />
-      <label for="nuevo_nombre_completo">Nuevo Nombre Completo (Apellido, Nombre)</label>
-      <input type="text" id="nuevo_nombre_completo" required />
-      <button type="submit">Modificar</button>
-    </form>
+      <form id="form-editar" style="margin-top: 30px;">
+        <h3>Editar Afiliado</h3>
+        <label for="dni_editar">DNI a modificar</label>
+        <input type="text" id="dni_editar" required />
+        <label for="nuevo_nro_afiliado">Nuevo N° Afiliado</label>
+        <input type="number" id="nuevo_nro_afiliado" required />
+        <label for="nuevo_nombre_completo">Nuevo Nombre Completo (Apellido, Nombre)</label>
+        <input type="text" id="nuevo_nombre_completo" required />
+        <button type="submit">Modificar</button>
+      </form>
 
-    <!-- Eliminar afiliado -->
-    <form id="form-eliminar" style="margin-top: 30px;">
-      <h3>Eliminar Afiliado</h3>
-      <label for="dni_eliminar">DNI a eliminar</label>
-      <input type="text" id="dni_eliminar" required />
-      <button type="submit">Eliminar</button>
-    </form>
+      <form id="form-eliminar" style="margin-top: 30px;">
+        <h3>Eliminar Afiliado</h3>
+        <label for="dni_eliminar">DNI a eliminar</label>
+        <input type="text" id="dni_eliminar" required />
+        <button type="submit">Eliminar</button>
+      </form>
+    </div>
   </div>
 
   <div id="listado-afiliados">
@@ -207,6 +230,58 @@
   </div>
 
   <script>
+    const adminToggleBtn = document.getElementById('admin-toggle');
+    const adminPanelContainer = document.getElementById('admin-panel-container');
+    const pinSection = document.getElementById('pin-section');
+    const adminPanel = document.getElementById('admin-panel');
+    const listadoAfiliados = document.getElementById('listado-afiliados');
+
+    adminToggleBtn.addEventListener('click', () => {
+      if (adminPanelContainer.style.display === 'block') {
+        adminPanelContainer.style.display = 'none';
+      } else {
+        adminPanelContainer.style.display = 'block';
+      }
+    });
+
+    const formPin = document.getElementById('form-pin');
+    formPin.addEventListener('submit', e => {
+      e.preventDefault();
+      const pin = document.getElementById('admin-pin').value;
+      if (pin === '1234') {
+        pinSection.style.display = 'none';
+        adminPanel.style.display = 'block';
+        listadoAfiliados.style.display = 'block';
+        cargarAfiliados();
+      } else {
+        alert('PIN incorrecto');
+      }
+    });
+
+    // Función para cargar afiliados
+    async function cargarAfiliados() {
+      try {
+        const res = await fetch('http://localhost:8080/afiliados/listado');
+        if (!res.ok) throw new Error('No se pudo cargar');
+        const afiliados = await res.json();
+        const tbody = document.getElementById('tabla-afiliados');
+        tbody.innerHTML = '';
+        afiliados.forEach(a => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${a.nro_afiliado}</td>
+            <td>${a.dni}</td>
+            <td>${a.nombre_completo}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (error) {
+        alert('Error al cargar el listado de afiliados');
+        console.error(error);
+      }
+    }
+
+    // El resto del código para verificar, descargar y admin sigue igual
     const formVerificar = document.getElementById('formulario-verificar');
     const resultadoDiv = document.getElementById('resultado');
     const descargarBtn = document.getElementById('descargar');
@@ -268,24 +343,7 @@
       }
     });
 
-    // Admin panel PIN
-    const formPin = document.getElementById('form-pin');
-    const adminAccessDiv = document.getElementById('admin-access');
-    const adminPanelDiv = document.getElementById('admin-panel');
-
-    formPin.addEventListener('submit', e => {
-      e.preventDefault();
-      const pin = document.getElementById('admin-pin').value;
-      if (pin === '1234') {
-        adminAccessDiv.style.display = 'none';
-        adminPanelDiv.style.display = 'block';
-        cargarAfiliados();
-      } else {
-        alert('PIN incorrecto');
-      }
-    });
-
-    // Agregar afiliado
+    // Formularios de agregar, editar y eliminar
     document.getElementById('form-agregar').addEventListener('submit', async e => {
       e.preventDefault();
       const nro_afiliado = document.getElementById('nro_afiliado_agregar').value.trim();
@@ -311,7 +369,6 @@
       }
     });
 
-    // Editar afiliado
     document.getElementById('form-editar').addEventListener('submit', async e => {
       e.preventDefault();
       const dni = document.getElementById('dni_editar').value.trim();
@@ -337,7 +394,6 @@
       }
     });
 
-    // Eliminar afiliado
     document.getElementById('form-eliminar').addEventListener('submit', async e => {
       e.preventDefault();
       const dni = document.getElementById('dni_eliminar').value.trim();
@@ -360,27 +416,6 @@
         alert('Error al conectar con el servidor');
       }
     });
-
-    // Cargar listado de afiliados
-    async function cargarAfiliados() {
-      try {
-        const res = await fetch('http://localhost:8080/afiliados/listado');
-        const afiliados = await res.json();
-        const tbody = document.getElementById('tabla-afiliados');
-        tbody.innerHTML = '';
-        afiliados.forEach(a => {
-          const tr = document.createElement('tr');
-          tr.innerHTML = `
-            <td>${a.nro_afiliado}</td>
-            <td>${a.dni}</td>
-            <td>${a.nombre_completo}</td>
-          `;
-          tbody.appendChild(tr);
-        });
-      } catch {
-        alert('Error al cargar listado de afiliados');
-      }
-    }
   </script>
 </body>
 </html>
