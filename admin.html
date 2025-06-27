@@ -257,9 +257,9 @@ async function cargarLogs() {
     const tbody = document.querySelector('#tablaLogs tbody');
     tbody.innerHTML = '';
     logs.forEach(l => {
-      const fecha = new Date(l.fecha).toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' });
+      const fecha = new Date(l.fecha).toLocaleString('es-AR', { hour12: true, timeZone: 'America/Argentina/Buenos_Aires' });
       const tr = document.createElement('tr');
-      tr.innerHTML = `<td>${l.accion}</td><td>${l.dni}</td><td>${l.nombre_completo}</td><td>${l.nro_afiliado}</td><td>${fecha}</td>`;
+      tr.innerHTML = `<td>${l.accion}</td><td>${l.dni}</td><td>${l.nombre_completo || ''}</td><td>${l.nro_afiliado || ''}</td><td>${fecha}</td>`;
       tbody.appendChild(tr);
     });
   } catch {}
@@ -271,4 +271,5 @@ cargarLogs();
 
 </body>
 </html>
+
 
