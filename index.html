@@ -22,7 +22,7 @@
       height: 400px;
       border-radius: 12px;
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-      padding: 20px 40px;
+      padding: 30px 40px 40px 40px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -89,18 +89,20 @@
     }
 
     .logo-bottom {
-      text-align: center;
-      margin-top: 10px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 15px;
+      /* separacion arriba */
     }
 
     .logo-bottom img {
-      max-height: 320px;       /* Más grande aún */
+      max-height: 200px;
       width: auto;
+      object-fit: contain;
       display: block;
-      margin: 40px auto 40px auto; /* Arriba y abajo: 20px, centrado horizontalmente */
     }
-
-
   </style>
 </head>
 <body>
