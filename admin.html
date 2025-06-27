@@ -17,14 +17,17 @@
       background: #003366;
       color: white;
       margin: 0;
+      font-size: 24px;
     }
     .contenedor {
       display: flex;
+      flex-wrap: wrap;
       padding: 20px;
       gap: 20px;
     }
     .columna {
       flex: 1;
+      min-width: 300px;
       background: white;
       padding: 20px;
       border-radius: 8px;
@@ -36,16 +39,18 @@
     form h2 {
       margin-top: 0;
       color: #003366;
+      font-size: 18px;
     }
     label {
       display: block;
       margin: 10px 0 5px;
       font-weight: bold;
+      font-size: 14px;
     }
     input, button {
       width: 100%;
-      padding: 10px;
-      font-size: 16px;
+      padding: 8px;
+      font-size: 14px;
       margin-bottom: 10px;
       box-sizing: border-box;
     }
@@ -65,20 +70,34 @@
       color: green;
       transition: opacity 0.3s ease;
       opacity: 0;
+      font-size: 14px;
     }
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 10px;
+      font-size: 12px;
     }
     th, td {
       border: 1px solid #ddd;
-      padding: 8px;
+      padding: 6px;
       text-align: left;
     }
     th {
       background-color: #003366;
       color: white;
+    }
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 20px;
+        padding: 15px;
+      }
+      .columna {
+        padding: 15px;
+      }
+      label, input, button {
+        font-size: 13px;
+      }
     }
   </style>
 </head>
@@ -98,6 +117,24 @@
       <button type="submit">Agregar</button>
     </form>
 
+    <form id="formEditar">
+      <h2>Editar Afiliado</h2>
+      <label for="dniEditar">DNI</label>
+      <input type="text" id="dniEditar" required />
+      <label for="nombreEditar">Nuevo Nombre Completo</label>
+      <input type="text" id="nombreEditar" required />
+      <label for="nroEditar">Nuevo N° Afiliado</label>
+      <input type="text" id="nroEditar" required />
+      <button type="submit">Editar</button>
+    </form>
+
+    <form id="formEliminar">
+      <h2>Eliminar Afiliado</h2>
+      <label for="dniEliminar">DNI</label>
+      <input type="text" id="dniEliminar" required />
+      <button type="submit">Eliminar</button>
+    </form>
+
     <h2>Listado de Afiliados</h2>
     <table id="tablaAfiliados">
       <thead><tr><th>N°</th><th>Nombre</th><th>DNI</th></tr></thead>
@@ -107,7 +144,7 @@
   <div class="columna">
     <h2>Logs de Cambios</h2>
     <table id="tablaLogs">
-      <thead><tr><th>Acción</th><th>DNI</th><th>Fecha</th></tr></thead>
+      <thead><tr><th>Acción</th><th>DNI</th><th>Nombre</th><th>N°</th><th>Fecha</th></tr></thead>
       <tbody></tbody>
     </table>
   </div>
@@ -117,10 +154,7 @@
 
 <script>
 const urlBase = 'https://afiliados-verificacion-production.up.railway.app';
-const formAgregar = document.getElementById('formAgregar');
 const mensajeDiv = document.getElementById('mensaje');
-const tablaAfiliadosBody = document.querySelector('#tablaAfiliados tbody');
-const tablaLogsBody = document.querySelector('#tablaLogs tbody');
 
 function mostrarMensaje(texto, esError = false) {
   mensajeDiv.textContent = texto;
@@ -129,17 +163,11 @@ function mostrarMensaje(texto, esError = false) {
   setTimeout(() => mensajeDiv.style.opacity = '0', 4000);
 }
 
-formAgregar.addEventListener('submit', async (e) => {
+document.getElementById('formAgregar').addEventListener('submit', async (e) => {
   e.preventDefault();
   const nro_afiliado = document.getElementById('nroAfiliado').value.trim();
   const nombre_completo = document.getElementById('nombreCompleto').value.trim();
   const dni = document.getElementById('dni').value.trim();
-
-  if (!nro_afiliado || !nombre_completo || !dni) {
-    mostrarMensaje('Complete todos los campos', true);
-    return;
-  }
-
   try {
     const res = await fetch(`${urlBase}/admin/cargar-afiliados`, {
       method: 'POST',
@@ -149,14 +177,62 @@ formAgregar.addEventListener('submit', async (e) => {
     const data = await res.json();
     if (data.success) {
       mostrarMensaje('Afiliado agregado correctamente');
-      formAgregar.reset();
+      e.target.reset();
       cargarAfiliados();
       cargarLogs();
     } else {
       mostrarMensaje(data.error || 'Error al agregar afiliado', true);
     }
-  } catch (err) {
-    mostrarMensaje('Error al conectar con el servidor', true);
+  } catch {
+    mostrarMensaje('Error de conexión', true);
+  }
+});
+
+document.getElementById('formEditar').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const dni = document.getElementById('dniEditar').value.trim();
+  const nombre_completo = document.getElementById('nombreEditar').value.trim();
+  const nro_afiliado = document.getElementById('nroEditar').value.trim();
+  try {
+    const res = await fetch(`${urlBase}/admin/editar-afiliado`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ dni, nombre_completo, nro_afiliado })
+    });
+    const data = await res.json();
+    if (data.success) {
+      mostrarMensaje('Afiliado modificado correctamente');
+      e.target.reset();
+      cargarAfiliados();
+      cargarLogs();
+    } else {
+      mostrarMensaje(data.error || 'Error al editar afiliado', true);
+    }
+  } catch {
+    mostrarMensaje('Error de conexión', true);
+  }
+});
+
+document.getElementById('formEliminar').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const dni = document.getElementById('dniEliminar').value.trim();
+  try {
+    const res = await fetch(`${urlBase}/admin/eliminar-afiliado`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ dni })
+    });
+    const data = await res.json();
+    if (data.success) {
+      mostrarMensaje('Afiliado eliminado correctamente');
+      e.target.reset();
+      cargarAfiliados();
+      cargarLogs();
+    } else {
+      mostrarMensaje(data.error || 'Error al eliminar afiliado', true);
+    }
+  } catch {
+    mostrarMensaje('Error de conexión', true);
   }
 });
 
@@ -164,31 +240,29 @@ async function cargarAfiliados() {
   try {
     const res = await fetch(`${urlBase}/admin/listar-afiliados`);
     const afiliados = await res.json();
-    tablaAfiliadosBody.innerHTML = '';
+    const tbody = document.querySelector('#tablaAfiliados tbody');
+    tbody.innerHTML = '';
     afiliados.forEach(a => {
       const tr = document.createElement('tr');
       tr.innerHTML = `<td>${a.nro_afiliado}</td><td>${a.nombre_completo}</td><td>${a.dni}</td>`;
-      tablaAfiliadosBody.appendChild(tr);
+      tbody.appendChild(tr);
     });
-  } catch {
-    tablaAfiliadosBody.innerHTML = '<tr><td colspan="3">Error cargando afiliados</td></tr>';
-  }
+  } catch {}
 }
 
 async function cargarLogs() {
   try {
     const res = await fetch(`${urlBase}/admin/listar-logs`);
     const logs = await res.json();
-    tablaLogsBody.innerHTML = '';
+    const tbody = document.querySelector('#tablaLogs tbody');
+    tbody.innerHTML = '';
     logs.forEach(l => {
       const fecha = new Date(l.fecha).toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' });
       const tr = document.createElement('tr');
-      tr.innerHTML = `<td>${l.accion}</td><td>${l.dni}</td><td>${fecha}</td>`;
-      tablaLogsBody.appendChild(tr);
+      tr.innerHTML = `<td>${l.accion}</td><td>${l.dni}</td><td>${l.nombre_completo}</td><td>${l.nro_afiliado}</td><td>${fecha}</td>`;
+      tbody.appendChild(tr);
     });
-  } catch {
-    tablaLogsBody.innerHTML = '<tr><td colspan="3">Error cargando logs</td></tr>';
-  }
+  } catch {}
 }
 
 cargarAfiliados();
