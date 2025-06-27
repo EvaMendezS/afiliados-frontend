@@ -154,10 +154,33 @@
       }
     });
 
-    descargarBtn.addEventListener('click', () => {
-      if (!dniAfiliado) return;
-      window.open(`https://afiliados-verificacion-production.up.railway.app/descargar-credencial?dni=${dniAfiliado}`, '_blank');
+    descargarBtn.addEventListener('click', async () => {
+  if (!ultimoDni) return;
+
+  try {
+    const response = await fetch('https://afiliados-verificacion-production.up.railway.app/credencial', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ dni: ultimoDni }),
     });
+
+    if (!response.ok) {
+      throw new Error('Error al generar la credencial');
+    }
+
+    // Obtener el archivo PDF como blob
+    const pdfBlob = await response.blob();
+
+    // Crear un enlace temporal para descargar el archivo
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(pdfBlob);
+    link.download = 'credencial.pdf'; // El nombre del archivo descargado
+    link.click();
+  } catch (error) {
+    console.error('Error descargando la credencial:', error);
+  }
+});
+
   </script>
 </body>
 </html>
