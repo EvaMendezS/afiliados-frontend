@@ -108,7 +108,9 @@
 <body>
   <h1>PANEL DE ADMINISTRADORES</h1>
   <div class="panel">
+    <!-- Columna izquierda -->
     <div class="columna">
+      <!-- Formulario Agregar -->
       <form id="form-agregar">
         <h3>Agregar Afiliado</h3>
         <label>DNI</label>
@@ -121,6 +123,7 @@
         <div class="mensaje" id="mensaje-agregar"></div>
       </form>
 
+      <!-- Formulario Editar -->
       <form id="form-editar">
         <h3>Editar Afiliado</h3>
         <label>DNI</label>
@@ -133,6 +136,7 @@
         <div class="mensaje" id="mensaje-editar"></div>
       </form>
 
+      <!-- Formulario Eliminar -->
       <form id="form-eliminar">
         <h3>Eliminar Afiliado</h3>
         <label>DNI</label>
@@ -141,12 +145,14 @@
         <div class="mensaje" id="mensaje-eliminar"></div>
       </form>
 
+      <!-- Lista de afiliados -->
       <div class="lista-afiliados">
         <h3>Afiliados Registrados</h3>
         <div id="lista-afiliados">Cargando...</div>
       </div>
     </div>
 
+    <!-- Columna derecha: Logs -->
     <div class="columna">
       <div class="registro">
         <h3>Registro de Cambios</h3>
@@ -236,11 +242,13 @@
     document.getElementById('form-eliminar').addEventListener('submit', async (e) => {
       e.preventDefault();
       const form = e.target;
-      const data = { dni: form.dni.value.trim() };
+      const data = {
+        dni: form.dni.value.trim()
+      };
 
       try {
         const res = await fetch(`${api}/admin/eliminar-afiliado`, {
-          method: 'POST', // usar POST para evitar problemas de CORS con DELETE
+          method: 'POST',
           headers,
           body: JSON.stringify(data)
         });
@@ -284,38 +292,21 @@
 
     async function cargarLogs() {
       try {
-        const res = await fetch(`${api}/admin/listar-logs`, {
-          headers,
-          method: 'GET',
-          mode: 'cors'
-        });
-
-        if (!res.ok) {
-          console.error('Respuesta no OK:', res.status);
-          document.getElementById('registro-cambios').textContent = 'Error al obtener logs';
-          return;
-        }
-
+        const res = await fetch(`${api}/admin/listar-logs`, { headers });
         const logs = await res.json();
-
         const contenedor = document.getElementById('registro-cambios');
-        if (!Array.isArray(logs)) {
-          contenedor.textContent = 'No hay registros disponibles';
+        if (logs.error) {
+          contenedor.textContent = 'Error al cargar logs';
           return;
         }
-
         contenedor.innerHTML = '';
         logs.forEach(log => {
           contenedor.innerHTML += `
             <div class="registro-entry">
               <strong>${log.accion}</strong> - ${log.nombre_completo} - DNI: ${log.dni} - N°: ${log.nro_afiliado}<br />
-              <small>${new Date(log.fecha).toLocaleString('es-AR')}</small>
+              <small>${log.fecha ? new Date(log.fecha).toLocaleString('es-AR') : ''}</small>
             </div>`;
         });
-
-        if (logs.length === 0) {
-          contenedor.innerHTML = '<p>No hay registros disponibles.</p>';
-        }
       } catch (error) {
         console.error('Error cargar logs:', error);
         document.getElementById('registro-cambios').textContent = 'Error al cargar logs';
@@ -327,5 +318,3 @@
   </script>
 </body>
 </html>
-
-
