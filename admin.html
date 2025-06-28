@@ -163,7 +163,7 @@
 
   <script>
     const PIN = '1234'; // el PIN que valida el backend
-    const api = 'http://localhost:8080';
+    const api = 'https://afiliados-verificacion-production.up.railway.app';
 
     // Header con PIN para todas las peticiones protegidas
     const headers = {
@@ -206,7 +206,8 @@
         } else {
           mostrarMensaje('mensaje-agregar', json.error || 'Error al agregar', false);
         }
-      } catch {
+      } catch (error) {
+        console.error('Error agregar:', error);
         mostrarMensaje('mensaje-agregar', 'Error en la conexión', false);
       }
     });
@@ -236,12 +237,13 @@
         } else {
           mostrarMensaje('mensaje-editar', json.error || 'Error al modificar', false);
         }
-      } catch {
+      } catch (error) {
+        console.error('Error editar:', error);
         mostrarMensaje('mensaje-editar', 'Error en la conexión', false);
       }
     });
 
-    // Eliminar afiliado
+    // Eliminar afiliado (cambiado a POST para evitar problemas con DELETE en algunos hosts)
     document.getElementById('form-eliminar').addEventListener('submit', async (e) => {
       e.preventDefault();
       const form = e.target;
@@ -251,7 +253,7 @@
 
       try {
         const res = await fetch(`${api}/admin/eliminar-afiliado`, {
-          method: 'DELETE',
+          method: 'POST', // Cambiado a POST
           headers,
           body: JSON.stringify(data)
         });
@@ -264,7 +266,8 @@
         } else {
           mostrarMensaje('mensaje-eliminar', json.error || 'Error al eliminar', false);
         }
-      } catch {
+      } catch (error) {
+        console.error('Error eliminar:', error);
         mostrarMensaje('mensaje-eliminar', 'Error en la conexión', false);
       }
     });
@@ -287,7 +290,8 @@
               DNI: ${a.dni} - N° Afiliado: ${a.nro_afiliado}
             </div>`;
         });
-      } catch {
+      } catch (error) {
+        console.error('Error cargar afiliados:', error);
         document.getElementById('lista-afiliados').textContent = 'Error al cargar afiliados';
       }
     }
@@ -310,7 +314,8 @@
               <small>${new Date(log.fecha).toLocaleString('es-AR')}</small>
             </div>`;
         });
-      } catch {
+      } catch (error) {
+        console.error('Error cargar logs:', error);
         document.getElementById('registro-cambios').textContent = 'Error al cargar logs';
       }
     }
