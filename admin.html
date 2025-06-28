@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Panel de Administrador</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel de Administración</title>
   <style>
     body {
       margin: 0;
@@ -11,21 +11,21 @@
       background-color: #f4f4f4;
     }
 
-    .container {
+    .admin-panel {
       display: flex;
       flex-direction: column;
       padding: 20px;
     }
 
-    .seccion-formularios {
+    .formularios {
       display: flex;
-      flex-wrap: wrap;
       gap: 20px;
+      flex-wrap: wrap;
       margin-bottom: 20px;
     }
 
     .formulario {
-      background: white;
+      background: #fff;
       padding: 15px;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
@@ -33,32 +33,31 @@
       min-width: 260px;
     }
 
-    h2 {
+    .formulario h2 {
+      margin-top: 0;
       color: #003366;
-      font-size: 18px;
-      margin-bottom: 10px;
     }
 
     label {
       display: block;
       margin-top: 10px;
-      font-size: 14px;
     }
 
-    input, button {
+    input {
       width: 100%;
       padding: 8px;
       margin-top: 5px;
-      font-size: 14px;
       box-sizing: border-box;
     }
 
     button {
+      width: 100%;
+      margin-top: 15px;
+      padding: 10px;
       background-color: #003366;
       color: white;
       border: none;
-      margin-top: 15px;
-      border-radius: 4px;
+      border-radius: 5px;
       cursor: pointer;
     }
 
@@ -66,14 +65,14 @@
       background-color: #0055aa;
     }
 
-    .contenedores {
+    .panel-datos {
       display: flex;
       flex-wrap: wrap;
       gap: 20px;
     }
 
-    .listado, .logs {
-      background: white;
+    .logs, .afiliados {
+      background: #fff;
       padding: 15px;
       border-radius: 10px;
       flex: 1;
@@ -82,51 +81,64 @@
       overflow-y: auto;
     }
 
-    .titulo {
-      text-align: center;
-      font-size: 20px;
-      margin-bottom: 10px;
+    .logs h3, .afiliados h3 {
+      margin-top: 0;
       color: #003366;
+      font-size: 18px;
+    }
+
+    ul {
+      list-style-type: none;
+      padding-left: 0;
     }
 
     @media (max-width: 768px) {
-      .contenedores {
-        flex-direction: column-reverse;
+      .panel-datos {
+        flex-direction: column;
       }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="seccion-formularios">
+  <div class="admin-panel">
+    <div class="formularios">
       <div class="formulario">
         <h2>Agregar Afiliado</h2>
-        <label>DNI</label><input id="agregar-dni" type="text">
-        <label>Nombre Completo</label><input id="agregar-nombre" type="text">
-        <label>N° Afiliado</label><input id="agregar-nro" type="text">
+        <label for="add-dni">DNI:</label>
+        <input type="text" id="add-dni">
+        <label for="add-nombre">Nombre completo:</label>
+        <input type="text" id="add-nombre">
+        <label for="add-nro">N° Afiliado:</label>
+        <input type="text" id="add-nro">
         <button onclick="agregarAfiliado()">Agregar</button>
       </div>
+
       <div class="formulario">
         <h2>Editar Afiliado</h2>
-        <label>DNI</label><input id="editar-dni" type="text">
-        <label>Nombre Completo</label><input id="editar-nombre" type="text">
-        <label>N° Afiliado</label><input id="editar-nro" type="text">
+        <label for="edit-dni">DNI:</label>
+        <input type="text" id="edit-dni">
+        <label for="edit-nombre">Nuevo nombre:</label>
+        <input type="text" id="edit-nombre">
+        <label for="edit-nro">Nuevo N° Afiliado:</label>
+        <input type="text" id="edit-nro">
         <button onclick="editarAfiliado()">Modificar</button>
       </div>
+
       <div class="formulario">
         <h2>Eliminar Afiliado</h2>
-        <label>DNI</label><input id="eliminar-dni" type="text">
+        <label for="delete-dni">DNI:</label>
+        <input type="text" id="delete-dni">
         <button onclick="eliminarAfiliado()">Eliminar</button>
       </div>
     </div>
 
-    <div class="contenedores">
+    <div class="panel-datos">
       <div class="logs">
-        <div class="titulo">Registro de Cambios</div>
+        <h3>Registro de Cambios</h3>
         <ul id="log-list"></ul>
       </div>
-      <div class="listado">
-        <div class="titulo">Listado de Afiliados</div>
+      <div class="afiliados">
+        <h3>Listado de Afiliados</h3>
         <ul id="afiliado-list"></ul>
       </div>
     </div>
@@ -136,15 +148,15 @@
     const PIN = '1234';
     const URL = 'http://localhost:8080';
 
-    function mensaje(texto) {
-      alert(texto);
+    function mostrarMensaje(msg) {
+      alert(msg);
       cargarDatos();
     }
 
     async function agregarAfiliado() {
-      const dni = document.getElementById('agregar-dni').value;
-      const nombre_completo = document.getElementById('agregar-nombre').value;
-      const nro_afiliado = document.getElementById('agregar-nro').value;
+      const dni = document.getElementById('add-dni').value;
+      const nombre_completo = document.getElementById('add-nombre').value;
+      const nro_afiliado = document.getElementById('add-nro').value;
 
       const res = await fetch(`${URL}/admin/cargar-afiliados`, {
         method: 'POST',
@@ -153,13 +165,13 @@
       });
 
       const data = await res.json();
-      mensaje(data.message || data.error);
+      mostrarMensaje(data.message || data.error);
     }
 
     async function editarAfiliado() {
-      const dni = document.getElementById('editar-dni').value;
-      const nombre_completo = document.getElementById('editar-nombre').value;
-      const nro_afiliado = document.getElementById('editar-nro').value;
+      const dni = document.getElementById('edit-dni').value;
+      const nombre_completo = document.getElementById('edit-nombre').value;
+      const nro_afiliado = document.getElementById('edit-nro').value;
 
       const res = await fetch(`${URL}/admin/editar-afiliado`, {
         method: 'PUT',
@@ -168,11 +180,11 @@
       });
 
       const data = await res.json();
-      mensaje(data.message || data.error);
+      mostrarMensaje(data.message || data.error);
     }
 
     async function eliminarAfiliado() {
-      const dni = document.getElementById('eliminar-dni').value;
+      const dni = document.getElementById('delete-dni').value;
 
       const res = await fetch(`${URL}/admin/eliminar-afiliado`, {
         method: 'DELETE',
@@ -181,12 +193,10 @@
       });
 
       const data = await res.json();
-      mensaje(data.message || data.error);
+      mostrarMensaje(data.message || data.error);
     }
 
     async function cargarDatos() {
-      const headers = { 'Content-Type': 'application/json' };
-
       const afiliadosRes = await fetch(`${URL}/admin/listar-afiliados?pin=${PIN}`);
       const logsRes = await fetch(`${URL}/admin/listar-logs?pin=${PIN}`);
 
@@ -215,5 +225,4 @@
   </script>
 </body>
 </html>
-
 
