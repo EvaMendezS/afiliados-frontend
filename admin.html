@@ -5,17 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Verificación de Afiliados</title>
   <style>
+    /* RESET y base */
     html, body {
-      margin: 0;
-      padding: 0;
-      height: 100vh;
+      margin: 0; padding: 0; height: 100vh; overflow: hidden;
       font-family: Arial, sans-serif;
       background-color: #e6e6e6;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
+      display: flex; justify-content: center; align-items: center;
+    }
+    button, input {
+      font-family: Arial, sans-serif;
     }
 
+    /* Contenedor principal verificación */
     .contenedor {
       background: white;
       width: 800px;
@@ -25,9 +26,9 @@
       padding: 30px 40px 40px 40px;
       display: flex;
       flex-direction: column;
+      justify-content: space-between;
       position: relative;
       overflow: hidden;
-      margin-top: 30px;
     }
 
     h1 {
@@ -105,11 +106,7 @@
       margin-top: 15px;
     }
 
-    #descargar {
-      display: none;
-    }
-
-    /* Botón admin pequeño en esquina superior derecha */
+    /* Botón admin pequeño fijo */
     #btn-admin {
       position: fixed;
       top: 10px;
@@ -122,6 +119,8 @@
       padding: 8px 12px;
       cursor: pointer;
       z-index: 1000;
+      width: auto;
+      height: auto;
     }
     #btn-admin:hover {
       background-color: #0055aa;
@@ -131,61 +130,75 @@
     #modal-pin {
       display: none;
       position: fixed;
-      top: 0; left: 0; right:0; bottom: 0;
+      top: 0; left: 0; right: 0; bottom: 0;
       background-color: rgba(0,0,0,0.5);
       justify-content: center;
       align-items: center;
-      z-index: 1500;
+      z-index: 2000;
     }
     #modal-pin.active {
       display: flex;
     }
     #modal-pin .modal-content {
       background: white;
-      padding: 30px;
+      padding: 30px 40px;
       border-radius: 10px;
-      width: 300px;
+      max-width: 320px;
+      width: 90%;
       box-sizing: border-box;
       text-align: center;
+      color: #003366;
     }
     #modal-pin input {
-      font-size: 18px;
-      padding: 10px;
       width: 100%;
-      margin-top: 15px;
-      border-radius: 6px;
+      padding: 10px;
+      font-size: 18px;
+      margin-top: 10px;
       border: 1px solid #ccc;
+      border-radius: 6px;
+      box-sizing: border-box;
     }
     #modal-pin button {
-      margin-top: 20px;
+      margin-top: 15px;
       padding: 12px;
-      width: 100%;
       font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      background-color: #003366;
+      color: white;
+      cursor: pointer;
+      width: 100%;
+    }
+    #modal-pin button:hover {
+      background-color: #0055aa;
+    }
+    #mensaje-pin {
+      margin-top: 10px;
+      font-weight: bold;
+      color: red;
     }
 
-    /* Admin page layout */
+    /* ADMIN PAGE */
     #admin-page {
       display: none;
-      width: 100%;
       max-width: 1200px;
       margin: 30px auto;
+      height: 80vh;
       display: flex;
       gap: 20px;
       font-family: Arial, sans-serif;
       color: #003366;
     }
-
     #admin-page.active {
       display: flex;
     }
 
-    /* Left: listado afiliados */
+    /* IZQUIERDA: listado afiliados */
     #admin-listado {
       flex: 1;
       background: white;
       border-radius: 10px;
       padding: 20px;
-      height: 80vh;
       overflow-y: auto;
     }
     #admin-listado h2 {
@@ -195,7 +208,8 @@
       width: 100%;
       border-collapse: collapse;
     }
-    #admin-listado th, #admin-listado td {
+    #admin-listado th,
+    #admin-listado td {
       border: 1px solid #ccc;
       padding: 8px;
       font-size: 14px;
@@ -209,21 +223,20 @@
       z-index: 10;
     }
 
-    /* Right: logs y formularios */
-    #admin-logs-y-formularios {
+    /* DERECHA: logs + formularios */
+    #admin-derecha {
       flex: 1;
-      background: white;
-      border-radius: 10px;
-      padding: 20px;
-      height: 80vh;
-      overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 15px;
+      height: 100%;
     }
 
     /* Logs */
     #admin-logs {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
       flex: 1;
       overflow-y: auto;
     }
@@ -235,7 +248,8 @@
       border-collapse: collapse;
       font-size: 14px;
     }
-    #admin-logs th, #admin-logs td {
+    #admin-logs th,
+    #admin-logs td {
       border: 1px solid #ccc;
       padding: 6px;
       text-align: left;
@@ -248,7 +262,21 @@
       z-index: 10;
     }
 
-    /* Formularios */
+    /* Formularios debajo logs */
+    #formularios-admin {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      overflow-y: auto;
+      max-height: 320px;
+    }
+
+    .formulario-admin {
+      margin-bottom: 20px;
+    }
+    .formulario-admin h2 {
+      margin-bottom: 8px;
+    }
     form.admin-form {
       display: flex;
       flex-direction: column;
@@ -272,12 +300,13 @@
       border: none;
       border-radius: 6px;
       cursor: pointer;
+      width: 100%;
     }
     form.admin-form button:hover {
       background-color: #0055aa;
     }
 
-    /* Mensajes de formulario */
+    /* Mensajes */
     .mensaje-exito {
       color: green;
       font-weight: bold;
@@ -289,128 +318,160 @@
       font-size: 14px;
     }
 
-    /* Responsive móvil para admin */
-    @media (max-width: 600px) {
+    /* Responsive móvil */
+    @media (max-width: 768px) {
+      body, html {
+        height: auto;
+        overflow-y: auto;
+      }
+      .contenedor {
+        width: 95%;
+        max-height: none;
+        padding: 20px;
+      }
+      h1 {
+        font-size: 28px;
+      }
+      label, input, button, #resultado {
+        font-size: 16px;
+      }
+      .logo-bottom img {
+        max-height: 220px;
+        margin-top: 10px;
+      }
+
+      /* ADMIN PAGE en móvil: formularios arriba, luego logs, luego listado */
       #admin-page {
         flex-direction: column;
         height: auto;
       }
-      #admin-listado, #admin-logs-y-formularios {
-        height: auto;
+      #formularios-admin {
+        max-height: none;
+        order: 1;
+      }
+      #admin-logs {
         max-height: 300px;
+        order: 2;
+      }
+      #admin-listado {
+        max-height: 300px;
+        order: 3;
       }
     }
   </style>
 </head>
 <body>
+  <!-- Botón ADMIN fijo -->
+  <button id="btn-admin">ADMIN</button>
 
-<button id="btn-admin">ADMIN</button>
+  <!-- Contenedor verificación -->
+  <div class="contenedor" id="main-contenedor">
+    <h1>Verificación de Afiliados</h1>
+    <form id="formulario">
+      <label for="dni">DNI</label>
+      <input type="text" id="dni" name="dni" required />
+      <button type="submit">Verificar</button>
+    </form>
 
-<div class="contenedor" id="main-contenedor">
-  <h1>Verificación de Afiliados</h1>
-  <form id="formulario">
-    <label for="dni">DNI</label>
-    <input type="text" id="dni" name="dni" required />
-    <button type="submit">Verificar</button>
-  </form>
+    <div id="resultado"></div>
+    <button id="descargar" style="display:none;">Ver Credencial</button>
 
-  <div id="resultado"></div>
-  <button id="descargar">Ver Credencial</button>
-
-  <div class="logo-bottom">
-    <img src="https://i.imgur.com/ZXJvT6b.png" alt="Logo de la empresa" />
-  </div>
-</div>
-
-<!-- Modal PIN -->
-<div id="modal-pin">
-  <div class="modal-content">
-    <h3>Ingrese PIN de administrador</h3>
-    <input type="password" id="input-pin" maxlength="10" />
-    <button id="btn-pin-aceptar">Aceptar</button>
-    <button id="btn-pin-cancelar" style="margin-top:8px; background:#ccc; color:#000;">Cancelar</button>
-    <div id="mensaje-pin" style="margin-top:10px; color:red;"></div>
-  </div>
-</div>
-
-<!-- Página Admin -->
-<div id="admin-page">
-  <div id="admin-listado">
-    <h2>Listado de Afiliados</h2>
-    <table id="tabla-afiliados">
-      <thead>
-        <tr>
-          <th>N° Afiliado</th>
-          <th>Nombre Completo</th>
-          <th>DNI</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+    <div class="logo-bottom">
+      <img src="https://i.imgur.com/ZXJvT6b.png" alt="Logo de la empresa" />
+    </div>
   </div>
 
-  <div id="admin-logs-y-formularios">
-    <div id="admin-logs">
-      <h2>Logs de Cambios</h2>
-      <table id="tabla-logs">
+  <!-- Modal PIN -->
+  <div id="modal-pin">
+    <div class="modal-content">
+      <h3>Ingrese PIN de administrador</h3>
+      <input type="password" id="input-pin" maxlength="10" />
+      <button id="btn-pin-aceptar">Aceptar</button>
+      <button id="btn-pin-cancelar" style="margin-top:8px; background:#ccc; color:#000;">Cancelar</button>
+      <div id="mensaje-pin"></div>
+    </div>
+  </div>
+
+  <!-- Página Admin -->
+  <div id="admin-page">
+    <div id="admin-listado">
+      <h2>Listado de Afiliados</h2>
+      <table id="tabla-afiliados">
         <thead>
           <tr>
-            <th>Acción</th>
-            <th>DNI</th>
-            <th>Nombre Completo</th>
             <th>N° Afiliado</th>
-            <th>Fecha</th>
+            <th>Nombre Completo</th>
+            <th>DNI</th>
           </tr>
         </thead>
         <tbody></tbody>
       </table>
     </div>
 
-    <div>
-      <h2>Agregar Afiliado</h2>
-      <form id="form-agregar" class="admin-form">
-        <label for="add-nro-afiliado">N° Afiliado</label>
-        <input type="text" id="add-nro-afiliado" required />
-        <label for="add-nombre-completo">Nombre Completo</label>
-        <input type="text" id="add-nombre-completo" required />
-        <label for="add-dni">DNI</label>
-        <input type="text" id="add-dni" required />
-        <button type="submit">Agregar</button>
-        <div id="msg-agregar"></div>
-      </form>
-    </div>
+    <div id="admin-derecha">
+      <div id="admin-logs">
+        <h2>Logs de Cambios</h2>
+        <table id="tabla-logs">
+          <thead>
+            <tr>
+              <th>Acción</th>
+              <th>DNI</th>
+              <th>Nombre Completo</th>
+              <th>N° Afiliado</th>
+              <th>Fecha</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
 
-    <div>
-      <h2>Editar Afiliado</h2>
-      <form id="form-editar" class="admin-form">
-        <label for="edit-dni">DNI (para buscar y editar)</label>
-        <input type="text" id="edit-dni" required />
-        <label for="edit-nro-afiliado">Nuevo N° Afiliado</label>
-        <input type="text" id="edit-nro-afiliado" required />
-        <label for="edit-nombre-completo">Nuevo Nombre Completo</label>
-        <input type="text" id="edit-nombre-completo" required />
-        <button type="submit">Editar</button>
-        <div id="msg-editar"></div>
-      </form>
-    </div>
+      <div id="formularios-admin">
+        <div class="formulario-admin">
+          <h2>Agregar Afiliado</h2>
+          <form id="form-agregar" class="admin-form">
+            <label for="add-nro-afiliado">N° Afiliado</label>
+            <input type="text" id="add-nro-afiliado" required />
+            <label for="add-nombre-completo">Nombre Completo</label>
+            <input type="text" id="add-nombre-completo" required />
+            <label for="add-dni">DNI</label>
+            <input type="text" id="add-dni" required />
+            <button type="submit">Agregar</button>
+            <div id="msg-agregar"></div>
+          </form>
+        </div>
 
-    <div>
-      <h2>Eliminar Afiliado</h2>
-      <form id="form-eliminar" class="admin-form">
-        <label for="delete-dni">DNI</label>
-        <input type="text" id="delete-dni" required />
-        <button type="submit">Eliminar</button>
-        <div id="msg-eliminar"></div>
-      </form>
+        <div class="formulario-admin">
+          <h2>Editar Afiliado</h2>
+          <form id="form-editar" class="admin-form">
+            <label for="edit-dni">DNI (para buscar y editar)</label>
+            <input type="text" id="edit-dni" required />
+            <label for="edit-nro-afiliado">Nuevo N° Afiliado</label>
+            <input type="text" id="edit-nro-afiliado" required />
+            <label for="edit-nombre-completo">Nuevo Nombre Completo</label>
+            <input type="text" id="edit-nombre-completo" required />
+            <button type="submit">Editar</button>
+            <div id="msg-editar"></div>
+          </form>
+        </div>
+
+        <div class="formulario-admin">
+          <h2>Eliminar Afiliado</h2>
+          <form id="form-eliminar" class="admin-form">
+            <label for="delete-dni">DNI</label>
+            <input type="text" id="delete-dni" required />
+            <button type="submit">Eliminar</button>
+            <div id="msg-eliminar"></div>
+          </form>
+        </div>
+      </div>
     </div>
   </div>
-</div>
 
 <script>
-  const baseURL = 'http://localhost:8080';
+  const baseURL = 'http://localhost:8080'; // Cambia si usas otro puerto o URL
   let adminPin = null;
 
-  // Elementos
+  // Elementos DOM
   const btnAdmin = document.getElementById('btn-admin');
   const modalPin = document.getElementById('modal-pin');
   const inputPin = document.getElementById('input-pin');
@@ -420,7 +481,7 @@
   const adminPage = document.getElementById('admin-page');
   const mainContenedor = document.getElementById('main-contenedor');
 
-  // Mostrar modal PIN al hacer click en admin
+  // Eventos botón admin
   btnAdmin.addEventListener('click', () => {
     modalPin.classList.add('active');
     inputPin.value = '';
@@ -438,13 +499,12 @@
       mensajePin.textContent = 'Ingrese un PIN válido';
       return;
     }
-    // Para validar PIN, haremos una petición que requiere pin y verificamos respuesta
     fetch(`${baseURL}/admin/listar-afiliados?pin=${encodeURIComponent(pin)}`)
       .then(res => {
         if (!res.ok) throw new Error('PIN incorrecto');
         return res.json();
       })
-      .then(data => {
+      .then(() => {
         adminPin = pin;
         modalPin.classList.remove('active');
         mainContenedor.style.display = 'none';
@@ -452,28 +512,25 @@
         cargarListadoAfiliados();
         cargarLogs();
       })
-      .catch(err => {
+      .catch(() => {
         mensajePin.textContent = 'PIN incorrecto';
-        console.error(err);
       });
   });
 
-  // Función fetch con pin en header
+  // Helper para fetch con pin
   function fetchConPin(url, options = {}) {
     if (!options.headers) options.headers = {};
-    if (adminPin) {
-      options.headers['x-admin-pin'] = adminPin;
-    }
+    if (adminPin) options.headers['x-admin-pin'] = adminPin;
     return fetch(url, options);
   }
 
-  // Verificación de afiliados (pantalla principal)
-  const formVerificar = document.getElementById('formulario');
+  // Verificación afiliado
+  const form = document.getElementById('formulario');
   const resultadoDiv = document.getElementById('resultado');
-  const btnDescargar = document.getElementById('descargar');
+  const descargarBtn = document.getElementById('descargar');
   let dniAfiliado = '';
 
-  formVerificar.addEventListener('submit', async e => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const dni = document.getElementById('dni').value.trim();
     dniAfiliado = dni;
@@ -482,12 +539,13 @@
     resultadoDiv.className = '';
 
     try {
-      const res = await fetch(`${baseURL}/verificar`, {
+      const response = await fetch(`${baseURL}/verificar`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ dni })
       });
-      const data = await res.json();
+
+      const data = await response.json();
 
       if (data.afiliado) {
         const nombreCompleto = data.datos.nombre_completo;
@@ -496,11 +554,11 @@
         const nombre = partes[1]?.trim() || '';
         resultadoDiv.textContent = `✅ AFILIADO: ${nombre} ${apellido} (N° ${data.datos.nro_afiliado})`;
         resultadoDiv.className = 'afiliado';
-        btnDescargar.style.display = 'block';
+        descargarBtn.style.display = 'block';
       } else {
         resultadoDiv.textContent = '❌ No se encontró afiliado con ese DNI.';
         resultadoDiv.className = 'no-afiliado';
-        btnDescargar.style.display = 'none';
+        descargarBtn.style.display = 'none';
       }
     } catch (error) {
       resultadoDiv.textContent = '⚠️ Error al conectar con el servidor.';
@@ -509,7 +567,7 @@
     }
   });
 
-  btnDescargar.addEventListener('click', () => {
+  descargarBtn.addEventListener('click', () => {
     if (!dniAfiliado) return;
     const url = `${baseURL}/credencial`;
     const form = document.createElement('form');
@@ -528,9 +586,8 @@
     document.body.removeChild(form);
   });
 
-  // --- Funciones ADMIN ---
+  // ADMIN FUNCIONES
 
-  // Cargar listado de afiliados
   function cargarListadoAfiliados() {
     fetchConPin(`${baseURL}/admin/listar-afiliados`)
       .then(res => res.json())
@@ -547,10 +604,9 @@
           tbody.appendChild(tr);
         });
       })
-      .catch(err => console.error(err));
+      .catch(console.error);
   }
 
-  // Cargar logs
   function cargarLogs() {
     fetchConPin(`${baseURL}/admin/listar-logs`)
       .then(res => res.json())
@@ -569,10 +625,11 @@
           tbody.appendChild(tr);
         });
       })
-      .catch(err => console.error(err));
+      .catch(console.error);
   }
 
-  // Agregar afiliado
+  // FORMULARIOS ADMIN
+
   const formAgregar = document.getElementById('form-agregar');
   const msgAgregar = document.getElementById('msg-agregar');
   formAgregar.addEventListener('submit', e => {
@@ -610,7 +667,6 @@
       });
   });
 
-  // Editar afiliado
   const formEditar = document.getElementById('form-editar');
   const msgEditar = document.getElementById('msg-editar');
   formEditar.addEventListener('submit', e => {
@@ -648,7 +704,6 @@
       });
   });
 
-  // Eliminar afiliado
   const formEliminar = document.getElementById('form-eliminar');
   const msgEliminar = document.getElementById('msg-eliminar');
   formEliminar.addEventListener('submit', e => {
