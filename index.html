@@ -212,10 +212,12 @@
           resultadoDiv.textContent = `✅ AFILIADO: ${nombre} ${apellido} (N° ${data.datos.nro_afiliado})`;
           resultadoDiv.className = 'afiliado';
           descargarBtn.style.display = 'block';
+          form.reset ();
         } else {
           resultadoDiv.textContent = '❌ No se encontró afiliado con ese DNI.';
           resultadoDiv.className = 'no-afiliado';
           descargarBtn.style.display = 'none';
+          form.reset ();
         }
       } catch (error) {
         resultadoDiv.textContent = '⚠️ Error al conectar con el servidor.';
