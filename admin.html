@@ -152,9 +152,9 @@
       <!-- Lista de afiliados -->
       <div class="lista-afiliados">
         <h3>Afiliados Registrados</h3>
-        <div id="lista-afiliados">Cargando...</div>
+        <button onclick="mostrarListadoAfiliados()">Mostrar Listado</button>
+        <div id="lista-afiliados" style="display: none; margin-top: 15px;">Cargando...</div>
       </div>
-    </div>
 
     <!-- Columna derecha: Logs -->
     <div class="columna">
@@ -319,6 +319,12 @@
 
     cargarAfiliados();
     cargarLogs();
+    
+    function mostrarListadoAfiliados() {
+     const contenedor = document.getElementById('lista-afiliados');
+     contenedor.style.display = 'block';
+      cargarAfiliados();
+    } 
   </script>
 </body>
 </html>
