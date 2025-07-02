@@ -112,58 +112,63 @@
   <button onclick="window.location.href='https://evamendezs.github.io/afiliados-frontend/'">Cerrar Sesión</button>
   </div>
   <div class="panel">
-    <!-- Columna izquierda -->
-    <div class="columna">
-      <!-- Formulario Agregar -->
-      <form id="form-agregar">
-        <h3>Agregar Afiliado</h3>
-        <label>DNI</label>
-        <input type="text" name="dni" required />
-        <label>Apellido y Nombre</label>
-        <input type="text" name="nombre_completo" required />
-        <label>N° Afiliado</label>
-        <input type="text" name="nro_afiliado" required />
-        <button type="submit">Agregar</button>
-        <div class="mensaje" id="mensaje-agregar"></div>
-      </form>
+  <!-- Columna izquierda -->
+  <div class="columna">
+    <!-- Formulario Agregar -->
+    <form id="form-agregar">
+      <h3>Agregar Afiliado</h3>
+      <label>DNI</label>
+      <input type="text" name="dni" required />
+      <label>Apellido y Nombre</label>
+      <input type="text" name="nombre_completo" required />
+      <label>N° Afiliado</label>
+      <input type="text" name="nro_afiliado" required />
+      <button type="submit">Agregar</button>
+      <div class="mensaje" id="mensaje-agregar"></div>
+    </form>
 
-      <!-- Formulario Editar -->
-      <form id="form-editar">
-        <h3>Editar Afiliado</h3>
-        <label>DNI</label>
-        <input type="text" name="dni" required />
-        <label>Apellido y Nombre</label>
-        <input type="text" name="nombre_completo" required />
-        <label>N° Afiliado</label>
-        <input type="text" name="nro_afiliado" required />
-        <button type="submit">Modificar</button>
-        <div class="mensaje" id="mensaje-editar"></div>
-      </form>
+    <!-- Formulario Editar -->
+    <form id="form-editar">
+      <h3>Editar Afiliado</h3>
+      <label>DNI</label>
+      <input type="text" name="dni" required />
+      <label>Apellido y Nombre</label>
+      <input type="text" name="nombre_completo" required />
+      <label>N° Afiliado</label>
+      <input type="text" name="nro_afiliado" required />
+      <button type="submit">Modificar</button>
+      <div class="mensaje" id="mensaje-editar"></div>
+    </form>
 
-      <!-- Formulario Eliminar -->
-      <form id="form-eliminar">
-        <h3>Eliminar Afiliado</h3>
-        <label>DNI</label>
-        <input type="text" name="dni" required />
-        <button type="submit">Eliminar</button>
-        <div class="mensaje" id="mensaje-eliminar"></div>
-      </form>
+    <!-- Formulario Eliminar -->
+    <form id="form-eliminar">
+      <h3>Eliminar Afiliado</h3>
+      <label>DNI</label>
+      <input type="text" name="dni" required />
+      <button type="submit">Eliminar</button>
+      <div class="mensaje" id="mensaje-eliminar"></div>
+    </form>
 
-      <!-- Lista de afiliados -->
-      <div class="lista-afiliados">
-        <h3>Afiliados Registrados</h3>
+    <!-- Lista de afiliados -->
+    <div class="lista-afiliados">
+      <h3>Afiliados Registrados</h3>
+      <div style="display: flex; gap: 10px; margin-bottom: 10px;">
         <button onclick="mostrarListadoAfiliados()">Mostrar Listado</button>
-        <div id="lista-afiliados" style="display: none; margin-top: 15px;">Cargando...</div>
+        <button onclick="cerrarListadoAfiliados()">Cerrar Listado</button>
       </div>
-
-    <!-- Columna derecha: Logs -->
-    <div class="columna">
-      <div class="registro">
-        <h3>Registro de Cambios</h3>
-        <div id="registro-cambios">Cargando...</div>
-      </div>
+      <div id="lista-afiliados" style="display: none;">Cargando...</div>
     </div>
   </div>
+
+  <!-- Columna derecha: Logs -->
+  <div class="columna">
+    <div class="registro">
+      <h3>Registro de Cambios</h3>
+      <div id="registro-cambios">Cargando...</div>
+    </div>
+  </div>
+</div>
+
 
   <script>
     const PIN = '1234';
@@ -319,12 +324,16 @@
 
     cargarAfiliados();
     cargarLogs();
-    
+
     function mostrarListadoAfiliados() {
      const contenedor = document.getElementById('lista-afiliados');
      contenedor.style.display = 'block';
       cargarAfiliados();
     } 
+    function cerrarListadoAfiliados() {
+       const contenedor = document.getElementById('lista-afiliados');
+      contenedor.style.display = 'none';
+    }  
   </script>
 </body>
 </html>
