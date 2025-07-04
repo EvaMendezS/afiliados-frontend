@@ -277,50 +277,58 @@
     });
 
     async function cargarAfiliados() {
-      try {
-        const res = await fetch(`${api}/admin/listar-afiliados`, { headers });
-        const afiliados = await res.json();
-        const contenedor = document.getElementById('lista-afiliados');
-        if (afiliados.error) {
-          contenedor.textContent = 'Error al cargar afiliados';
-          return;
-        }
-        contenedor.innerHTML = '';
-        afiliados.forEach(a => {
-          contenedor.innerHTML += `
-            <div class="afiliado-entry">
-              <strong>${a.nombre_completo}</strong><br />
-              DNI: ${a.dni} - N° Afiliado: ${a.nro_afiliado}
-            </div>`;
-        });
-      } catch (error) {
-        console.error('Error cargar afiliados:', error);
-        document.getElementById('lista-afiliados').textContent = 'Error al cargar afiliados';
+     try {
+      const res = await fetch(`${api}/admin/listar-afiliados`, {
+       headers,
+       credentials: 'include' // ✅ agregado
+      });
+      const afiliados = await res.json();
+      const contenedor = document.getElementById('lista-afiliados');
+      if (afiliados.error) {
+      contenedor.textContent = 'Error al cargar afiliados';
+      return;
       }
+      contenedor.innerHTML = '';
+      afiliados.forEach(a => {
+       contenedor.innerHTML += `
+        <div class="afiliado-entry">
+          <strong>${a.nombre_completo}</strong><br />
+          DNI: ${a.dni} - N° Afiliado: ${a.nro_afiliado}
+        </div>`;
+      });
+     } catch (error) {
+       console.error('Error cargar afiliados:', error);
+       document.getElementById('lista-afiliados').textContent = 'Error al cargar afiliados';
+     }
     }
 
     async function cargarLogs() {
-      try {
-        const res = await fetch(`${api}/admin/listar-logs`, { headers });
-        const logs = await res.json();
-        const contenedor = document.getElementById('registro-cambios');
-        if (logs.error) {
-          contenedor.textContent = 'Error al cargar logs';
-          return;
-        }
-        contenedor.innerHTML = '';
-        logs.forEach(log => {
-          contenedor.innerHTML += `
-            <div class="registro-entry">
-              <strong>${log.accion}</strong> - ${log.nombre_completo} - DNI: ${log.dni} - N°: ${log.nro_afiliado}<br />
-              <small>${log.fecha ? new Date(log.fecha).toLocaleString('es-AR') : ''}</small>
-            </div>`;
-        });
+     try {
+       const res = await fetch(`${api}/admin/listar-logs`, {
+        headers,
+        credentials: 'include' // ✅ agregado 
+       });
+       const logs = await res.json();
+       const contenedor = document.getElementById('registro-cambios');
+       if (logs.error) {
+       contenedor.textContent = 'Error al cargar logs';
+       return;
+       }
+       contenedor.innerHTML = '';
+       logs.forEach(log => {
+       contenedor.innerHTML += `
+        <div class="registro-entry">
+          <strong>${log.accion}</strong> - ${log.nombre_completo} - DNI: ${log.dni} - N°: ${log.nro_afiliado}<br />
+          <small>${log.fecha ? new Date(log.fecha).toLocaleString('es-AR') : ''}</small>
+        </div>`;
+       });
       } catch (error) {
         console.error('Error cargar logs:', error);
         document.getElementById('registro-cambios').textContent = 'Error al cargar logs';
-      }
+      }    
     }
+
+
 
     cargarAfiliados();
     cargarLogs();
