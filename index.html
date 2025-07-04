@@ -106,7 +106,6 @@
       margin-top: 15px;
     }
 
-    /* Responsivo para pantallas chicas */
     @media (max-width: 850px) {
       .contenedor {
         width: 95%;
@@ -115,21 +114,13 @@
         padding: 20px;
       }
 
-      h1 {
-        font-size: 28px;
-      }
+      h1 { font-size: 28px; }
+      label, input, button, #resultado { font-size: 16px; }
 
-      label, input, button, #resultado {
-        font-size: 16px;
-      }
-
-      .logo-bottom img {
-        max-height: 220px;
-        margin-top: 10px;
-      }
+      .logo-bottom img { max-height: 220px; margin-top: 10px; }
     }
 
-    /* Botón admin fijo fuera del contenedor */
+    /* Botón admin flotante */
     #btnAdmin {
       position: fixed;
       top: 15px;
@@ -150,9 +141,7 @@
       padding: 0;
       line-height: 1;
     }
-    #btnAdmin:hover {
-      background-color: #005500;
-    }
+    #btnAdmin:hover { background-color: #005500; }
   </style>
 </head>
 <body>
@@ -178,13 +167,13 @@
   </div>
 
   <script>
+    /* ---------- Verificación de afiliados ---------- */
     const form = document.getElementById('formulario');
     const resultadoDiv = document.getElementById('resultado');
-    const descargarBtn = document.getElementById('descargar');
+    const descargarBtn  = document.getElementById('descargar');
     const btnAdmin = document.getElementById('btnAdmin');
     let dniAfiliado = '';
 
-    // Cambia por tu URL backend o localhost
     const urlBase = 'https://afiliados-verificacion-production.up.railway.app';
 
     form.addEventListener('submit', async (e) => {
@@ -212,12 +201,12 @@
           resultadoDiv.textContent = `✅ AFILIADO: ${nombre} ${apellido} (N° ${data.datos.nro_afiliado})`;
           resultadoDiv.className = 'afiliado';
           descargarBtn.style.display = 'block';
-          form.reset ();
+          form.reset();
         } else {
           resultadoDiv.textContent = '❌ No se encontró afiliado con ese DNI.';
           resultadoDiv.className = 'no-afiliado';
           descargarBtn.style.display = 'none';
-          form.reset ();
+          form.reset();
         }
       } catch (error) {
         resultadoDiv.textContent = '⚠️ Error al conectar con el servidor.';
@@ -245,14 +234,23 @@
       document.body.removeChild(form);
     });
 
+    /* ---------- Acceso a panel de administración ---------- */
+    const PIN_CORRECTO = '1906';
+    let adminWin = null;   // referencia a la ventana del admin
+
     btnAdmin.addEventListener('click', () => {
       const pin = prompt('Ingrese PIN de administrador:');
       if (!pin) return;
 
-      const PIN_CORRECTO = '1906';
-
       if (pin === PIN_CORRECTO) {
-        window.open('admin.html', '_blank');
+        // Guardar PIN y abrir/focalizar admin
+        localStorage.setItem('pin', PIN_CORRECTO);
+
+        if (adminWin && !adminWin.closed) {
+          adminWin.focus();
+        } else {
+          adminWin = window.open('admin.html', '_blank');
+        }
       } else {
         alert('PIN incorrecto');
       }

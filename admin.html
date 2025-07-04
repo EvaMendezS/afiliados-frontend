@@ -108,14 +108,12 @@
 <body>
   <h1>PANEL DE ADMINISTRADORES</h1>
   <div style="text-align: center; margin-bottom: 20px;">
-    <button onclick="window.open('https://evamendezs.github.io/afiliados-frontend/', '_self')">Ir a Verificación</button>
-    <button onclick="window.location.href='https://evamendezs.github.io/afiliados-frontend/'">Cerrar Sesión</button>
+    <button onclick="irAVerificacion()">Ir a Verificación</button>
+    <button onclick="cerrarSesionManual()">Cerrar Sesión</button>
   </div>
 
   <div class="panel">
-    <!-- Columna izquierda -->
     <div class="columna">
-      <!-- Formulario Agregar -->
       <form id="form-agregar">
         <h3>Agregar Afiliado</h3>
         <label>DNI</label>
@@ -128,7 +126,6 @@
         <div class="mensaje" id="mensaje-agregar"></div>
       </form>
 
-      <!-- Formulario Editar -->
       <form id="form-editar">
         <h3>Editar Afiliado</h3>
         <label>DNI</label>
@@ -141,7 +138,6 @@
         <div class="mensaje" id="mensaje-editar"></div>
       </form>
 
-      <!-- Formulario Eliminar -->
       <form id="form-eliminar">
         <h3>Eliminar Afiliado</h3>
         <label>DNI</label>
@@ -151,7 +147,6 @@
       </form>
     </div>
 
-    <!-- Columna derecha: Logs -->
     <div class="columna">
       <div class="registro">
         <h3>Registro de Cambios</h3>
@@ -163,7 +158,6 @@
   <script>
     const PIN = '1906';
     const api = 'https://afiliados-verificacion-production.up.railway.app';
-
     const headers = {
       'Content-Type': 'application/json',
       'x-admin-pin': PIN
@@ -293,6 +287,46 @@
     }
 
     cargarLogs();
+
+    // =============================
+    // 🔐 SEGURIDAD Y SESIÓN
+    // =============================
+    const PIN_CORRECTO = '1906';
+    const TIEMPO_INACTIVIDAD = 5 * 60 * 1000;
+
+    const pinGuardado = localStorage.getItem('pin');
+    if (pinGuardado !== PIN_CORRECTO) {
+      window.location.href = 'index.html';
+    }
+
+    let inactividadTimer = setTimeout(cerrarSesion, TIEMPO_INACTIVIDAD);
+    function resetearInactividad() {
+      clearTimeout(inactividadTimer);
+      inactividadTimer = setTimeout(cerrarSesion, TIEMPO_INACTIVIDAD);
+    }
+
+    function cerrarSesion() {
+      alert('Sesión cerrada por inactividad');
+      localStorage.removeItem('pin');
+      window.close();
+    }
+
+    function cerrarSesionManual() {
+      localStorage.removeItem('pin');
+      window.close();
+    }
+
+    function irAVerificacion() {
+      if (window.opener && !window.opener.closed) {
+        window.opener.focus();
+      } else {
+        window.open('index.html', '_blank');
+      }
+    }
+
+    window.addEventListener('mousemove', resetearInactividad);
+    window.addEventListener('keydown', resetearInactividad);
+    window.addEventListener('click', resetearInactividad);
   </script>
 </body>
 </html>
