@@ -280,12 +280,14 @@
   });
 
   async function cargarAfiliados() {
+    console.log("🔄 Cargando afiliados...");
     try {
       const res = await fetch(`${api}/admin/listar-afiliados`, {
         headers,
         credentials: 'include' // ✅ necesario
       });
       const afiliados = await res.json();
+      console.log("✅ Afiliados recibidos:", afiliados);
       const contenedor = document.getElementById('lista-afiliados');
       if (afiliados.error) {
         contenedor.textContent = 'Error al cargar afiliados';
@@ -306,12 +308,14 @@
   }
 
   async function cargarLogs() {
+    console.log("🔄 Cargando logs...");
     try {
       const res = await fetch(`${api}/admin/listar-logs`, {
         headers,
         credentials: 'include' // ✅ necesario
       });
       const logs = await res.json();
+      console.log("✅ Logs recibidos:", logs);
       const contenedor = document.getElementById('registro-cambios');
       if (logs.error) {
         contenedor.textContent = 'Error al cargar logs';
