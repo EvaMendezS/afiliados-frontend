@@ -105,11 +105,11 @@
     }
   </style>
 </head>
-<body>
+<body style="display: none">
   <h1>PANEL DE ADMINISTRADORES</h1>
   <div style="text-align: center; margin-bottom: 20px;">
     <button onclick="irAVerificacion()">Ir a Verificación</button>
-    <button onclick="cerrarSesionManual()">Cerrar Sesión</button>
+    <button onclick="cerrarSesion()">Cerrar Sesión</button>
   </div>
 
   <div class="panel">
@@ -156,11 +156,34 @@
   </div>
 
   <script>
-    const PIN = '1906';
+    const PIN_CORRECTO = '1906';
     const api = 'https://afiliados-verificacion-production.up.railway.app';
+    const pinGuardado = localStorage.getItem('pin');
+
+    if (pinGuardado !== PIN_CORRECTO) {
+      window.location.href = 'index.html';
+    } else {
+      document.body.style.display = 'block';
+    }
+
+    let timeout;
+    function reiniciarInactividad() {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        alert('Sesión cerrada por inactividad');
+        cerrarSesion();
+      }, 5 * 60 * 1000); // 5 minutos
+    }
+
+    ['click', 'mousemove', 'keydown'].forEach(evt =>
+      document.addEventListener(evt, reiniciarInactividad)
+    );
+
+    reiniciarInactividad();
+
     const headers = {
       'Content-Type': 'application/json',
-      'x-admin-pin': PIN
+      'x-admin-pin': PIN_CORRECTO
     };
 
     function mostrarMensaje(id, texto, exito = true) {
@@ -235,9 +258,7 @@
     document.getElementById('form-eliminar').addEventListener('submit', async (e) => {
       e.preventDefault();
       const form = e.target;
-      const data = {
-        dni: form.dni.value.trim()
-      };
+      const data = { dni: form.dni.value.trim() };
 
       try {
         const res = await fetch(`${api}/admin/eliminar-afiliado`, {
@@ -288,45 +309,26 @@
 
     cargarLogs();
 
-    // =============================
-    // 🔐 SEGURIDAD Y SESIÓN
-    // =============================
-    const PIN_CORRECTO = '1906';
-    const TIEMPO_INACTIVIDAD = 5 * 60 * 1000;
-
-    const pinGuardado = localStorage.getItem('pin');
-    if (pinGuardado !== PIN_CORRECTO) {
-      window.location.href = 'index.html';
-    }
-
-    let inactividadTimer = setTimeout(cerrarSesion, TIEMPO_INACTIVIDAD);
-    function resetearInactividad() {
-      clearTimeout(inactividadTimer);
-      inactividadTimer = setTimeout(cerrarSesion, TIEMPO_INACTIVIDAD);
-    }
-
     function cerrarSesion() {
-      alert('Sesión cerrada por inactividad');
       localStorage.removeItem('pin');
-      window.close();
-    }
-
-    function cerrarSesionManual() {
-      localStorage.removeItem('pin');
+      if (window.opener && !window.opener.closed) {
+        window.opener.focus();
+      }
       window.close();
     }
 
     function irAVerificacion() {
-      if (window.opener && !window.opener.closed) {
-        window.opener.focus();
-      } else {
+      try {
+        if (window.opener && !window.opener.closed) {
+          window.opener.focus();
+          window.close();
+        } else {
+          window.open('index.html', '_blank');
+        }
+      } catch (e) {
         window.open('index.html', '_blank');
       }
     }
-
-    window.addEventListener('mousemove', resetearInactividad);
-    window.addEventListener('keydown', resetearInactividad);
-    window.addEventListener('click', resetearInactividad);
   </script>
 </body>
 </html>
