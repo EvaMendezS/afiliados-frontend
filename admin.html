@@ -1,4 +1,3 @@
-<!-- Reemplazá TODO tu admin.html por este contenido -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -12,24 +11,20 @@
       padding: 20px;
       background-color: #f0f0f0;
     }
-
     h1 {
       color: #003366;
       text-align: center;
       margin-bottom: 20px;
     }
-
     .panel {
       display: flex;
       flex-wrap: wrap;
       gap: 20px;
     }
-
     .columna {
       flex: 1;
       min-width: 300px;
     }
-
     form {
       background: white;
       padding: 15px;
@@ -37,20 +32,17 @@
       box-shadow: 0 0 5px rgba(0,0,0,0.1);
       margin-bottom: 15px;
     }
-
     label {
       display: block;
       margin-top: 10px;
       font-weight: bold;
     }
-
     input {
       width: 100%;
       padding: 8px;
       margin-top: 5px;
       box-sizing: border-box;
     }
-
     button {
       margin-top: 15px;
       background-color: #003366;
@@ -61,24 +53,19 @@
       border-radius: 4px;
       cursor: pointer;
     }
-
     button:hover {
       background-color: #0055aa;
     }
-
     .mensaje {
       margin-top: 10px;
       font-weight: bold;
     }
-
     .exito {
       color: green;
     }
-
     .error {
       color: red;
     }
-
     .registro, .lista-afiliados {
       background: white;
       padding: 15px;
@@ -88,43 +75,32 @@
       overflow-y: auto;
       margin-bottom: 20px;
     }
-
     .registro h3, .lista-afiliados h3 {
       margin-top: 0;
     }
-
     .registro-entry, .afiliado-entry {
       margin-bottom: 10px;
       border-bottom: 1px solid #ccc;
       padding-bottom: 5px;
     }
-
     .paginacion {
       display: flex;
       gap: 5px;
-      margin-top: 10px;
       flex-wrap: wrap;
       justify-content: center;
+      margin-top: 10px;
     }
-
     .paginacion button {
       padding: 5px 10px;
+      background-color: #e0e0e0;
       border: none;
-      background: #003366;
-      color: white;
-      border-radius: 4px;
+      border-radius: 3px;
       cursor: pointer;
     }
-
-    .paginacion button.active {
-      background-color: #0055aa;
-      font-weight: bold;
+    .paginacion button.activa {
+      background-color: #003366;
+      color: white;
     }
-
-    .paginacion button:hover {
-      background-color: #0066cc;
-    }
-
     @media (max-width: 768px) {
       .panel {
         flex-direction: column;
@@ -133,176 +109,265 @@
   </style>
 </head>
 <body>
-  <h1>PANEL DE ADMINISTRADORES</h1>
-  <div style="text-align: center; margin-bottom: 20px;">
-    <button onclick="window.open('https://evamendezs.github.io/afiliados-frontend/', '_self')">Ir a Verificación</button>
-    <button onclick="window.location.href='https://evamendezs.github.io/afiliados-frontend/'">Cerrar Sesión</button>
-  </div>
-  <div class="panel">
-    <!-- Columna izquierda -->
-    <div class="columna">
-      <form id="form-agregar">
-        <h3>Agregar Afiliado</h3>
-        <label>DNI</label>
-        <input type="text" name="dni" required />
-        <label>Apellido y Nombre</label>
-        <input type="text" name="nombre_completo" required />
-        <label>N° Afiliado</label>
-        <input type="text" name="nro_afiliado" required />
-        <button type="submit">Agregar</button>
-        <div class="mensaje" id="mensaje-agregar"></div>
-      </form>
+<h1>PANEL DE ADMINISTRADORES</h1>
+<div style="text-align: center; margin-bottom: 20px;">
+  <button onclick="window.open('https://evamendezs.github.io/afiliados-frontend/', '_self')">Ir a Verificación</button>
+  <button onclick="window.location.href='https://evamendezs.github.io/afiliados-frontend/'">Cerrar Sesión</button>
+</div>
+<div class="panel">
+  <div class="columna">
+    <form id="form-agregar">
+      <h3>Agregar Afiliado</h3>
+      <label>DNI</label>
+      <input type="text" name="dni" required />
+      <label>Apellido y Nombre</label>
+      <input type="text" name="nombre_completo" required />
+      <label>N° Afiliado</label>
+      <input type="text" name="nro_afiliado" required />
+      <button type="submit">Agregar</button>
+      <div class="mensaje" id="mensaje-agregar"></div>
+    </form>
 
-      <form id="form-editar">
-        <h3>Editar Afiliado</h3>
-        <label>DNI</label>
-        <input type="text" name="dni" required />
-        <label>Apellido y Nombre</label>
-        <input type="text" name="nombre_completo" required />
-        <label>N° Afiliado</label>
-        <input type="text" name="nro_afiliado" required />
-        <button type="submit">Modificar</button>
-        <div class="mensaje" id="mensaje-editar"></div>
-      </form>
+    <form id="form-editar">
+      <h3>Editar Afiliado</h3>
+      <label>DNI</label>
+      <input type="text" name="dni" required />
+      <label>Apellido y Nombre</label>
+      <input type="text" name="nombre_completo" required />
+      <label>N° Afiliado</label>
+      <input type="text" name="nro_afiliado" required />
+      <button type="submit">Modificar</button>
+      <div class="mensaje" id="mensaje-editar"></div>
+    </form>
 
-      <form id="form-eliminar">
-        <h3>Eliminar Afiliado</h3>
-        <label>DNI</label>
-        <input type="text" name="dni" required />
-        <button type="submit">Eliminar</button>
-        <div class="mensaje" id="mensaje-eliminar"></div>
-      </form>
+    <form id="form-eliminar">
+      <h3>Eliminar Afiliado</h3>
+      <label>DNI</label>
+      <input type="text" name="dni" required />
+      <button type="submit">Eliminar</button>
+      <div class="mensaje" id="mensaje-eliminar"></div>
+    </form>
 
-      <div class="lista-afiliados">
-        <h3>Afiliados Registrados</h3>
-        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-          <button onclick="mostrarListadoAfiliados()">Mostrar Listado</button>
-          <button onclick="cerrarListadoAfiliados()">Cerrar Listado</button>
-        </div>
-        <div id="lista-afiliados" style="display: none;">Cargando...</div>
+    <div class="lista-afiliados">
+      <h3>Afiliados Registrados</h3>
+      <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+        <button onclick="mostrarListadoAfiliados()">Mostrar Listado</button>
+        <button onclick="cerrarListadoAfiliados()">Cerrar Listado</button>
+      </div>
+      <div id="lista-afiliados" style="display: none;">
+        <div id="contenedor-afiliados">Cargando...</div>
         <div class="paginacion" id="paginacion"></div>
       </div>
     </div>
-
-    <div class="columna">
-      <div class="registro">
-        <h3>Registro de Cambios</h3>
-        <div id="registro-cambios">Cargando...</div>
-      </div>
-    </div>
   </div>
 
+  <div class="columna">
+    <div class="registro">
+      <h3>Registro de Cambios</h3>
+      <div id="registro-cambios">Cargando...</div>
+    </div>
+  </div>
+</div>
+
 <script>
-  const PIN = '1906';
-  const api = 'https://afiliados-verificacion-production.up.railway.app';
-  const headers = {
-    'Content-Type': 'application/json',
-    'x-admin-pin': PIN
+const PIN = '1906';
+const api = 'https://afiliados-verificacion-production.up.railway.app';
+const headers = { 'Content-Type': 'application/json', 'x-admin-pin': PIN };
+
+let afiliadosGlobal = [];
+let afiliadosPorPagina = 100;
+let paginaActual = 1;
+
+function mostrarMensaje(id, texto, exito = true) {
+  const el = document.getElementById(id);
+  el.textContent = texto;
+  el.className = 'mensaje ' + (exito ? 'exito' : 'error');
+  setTimeout(() => { el.textContent = ''; }, 4000);
+}
+
+document.getElementById('form-agregar').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const data = {
+    dni: form.dni.value.trim(),
+    nombre_completo: form.nombre_completo.value.trim(),
+    nro_afiliado: form.nro_afiliado.value.trim()
   };
-  let afiliadosGlobal = [];
-  let paginaActual = 1;
-  const porPagina = 100;
 
-  function mostrarMensaje(id, texto, exito = true) {
-    const el = document.getElementById(id);
-    el.textContent = texto;
-    el.className = 'mensaje ' + (exito ? 'exito' : 'error');
-    setTimeout(() => el.textContent = '', 4000);
-  }
-
-  async function cargarAfiliados() {
-    try {
-      const res = await fetch(`${api}/admin/listar-afiliados`, { headers });
-      const afiliados = await res.json();
-      if (afiliados.error) {
-        document.getElementById('lista-afiliados').textContent = 'Error al cargar afiliados';
-        return;
-      }
-      afiliadosGlobal = afiliados;
-      mostrarPagina(paginaActual);
-    } catch (error) {
-      console.error('Error cargar afiliados:', error);
-      document.getElementById('lista-afiliados').textContent = 'Error al cargar afiliados';
+  try {
+    const res = await fetch(`${api}/admin/cargar-afiliados`, {
+      method: 'POST', headers, body: JSON.stringify(data), credentials: 'include'
+    });
+    const json = await res.json();
+    if (json.success) {
+      mostrarMensaje('mensaje-agregar', 'Afiliado agregado correctamente', true);
+      cargarAfiliados();
+      cargarLogs();
+      form.reset();
+    } else {
+      mostrarMensaje('mensaje-agregar', json.error || 'Error al agregar', false);
     }
+  } catch (error) {
+    console.error('Error agregar:', error);
+    mostrarMensaje('mensaje-agregar', 'Error en la conexión', false);
   }
+});
 
-  function mostrarPagina(pagina) {
-    paginaActual = pagina;
-    const contenedor = document.getElementById('lista-afiliados');
-    const inicio = (pagina - 1) * porPagina;
-    const fin = inicio + porPagina;
-    const afiliadosPagina = afiliadosGlobal.slice(inicio, fin);
+document.getElementById('form-editar').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const data = {
+    dni: form.dni.value.trim(),
+    nombre_completo: form.nombre_completo.value.trim(),
+    nro_afiliado: form.nro_afiliado.value.trim()
+  };
 
-    contenedor.innerHTML = afiliadosPagina.map(a => `
+  try {
+    const res = await fetch(`${api}/admin/editar-afiliado`, {
+      method: 'PUT', headers, body: JSON.stringify(data), credentials: 'include'
+    });
+    const json = await res.json();
+    if (json.success) {
+      mostrarMensaje('mensaje-editar', 'Afiliado modificado correctamente', true);
+      cargarAfiliados();
+      cargarLogs();
+      form.reset();
+    } else {
+      mostrarMensaje('mensaje-editar', json.error || 'Error al modificar', false);
+    }
+  } catch (error) {
+    console.error('Error editar:', error);
+    mostrarMensaje('mensaje-editar', 'Error en la conexión', false);
+  }
+});
+
+document.getElementById('form-eliminar').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const data = { dni: form.dni.value.trim() };
+
+  try {
+    const res = await fetch(`${api}/admin/eliminar-afiliado`, {
+      method: 'POST', headers, body: JSON.stringify(data), credentials: 'include'
+    });
+    const json = await res.json();
+    if (json.success) {
+      mostrarMensaje('mensaje-eliminar', 'Afiliado eliminado correctamente', true);
+      cargarAfiliados();
+      cargarLogs();
+      form.reset();
+    } else {
+      mostrarMensaje('mensaje-eliminar', json.error || 'Error al eliminar', false);
+    }
+  } catch (error) {
+    console.error('Error eliminar:', error);
+    mostrarMensaje('mensaje-eliminar', 'Error en la conexión', false);
+  }
+});
+
+async function cargarAfiliados() {
+  console.log("🔄 Cargando afiliados...");
+  try {
+    const res = await fetch(`${api}/admin/listar-afiliados`, {
+      headers, credentials: 'include'
+    });
+    const json = await res.json();
+    if (!Array.isArray(json)) {
+      console.error("❌ Respuesta no válida:", json);
+      document.getElementById('contenedor-afiliados').textContent = 'Error al cargar afiliados';
+      return;
+    }
+    afiliadosGlobal = json;
+    mostrarPagina(1);
+  } catch (error) {
+    console.error('Error cargar afiliados:', error);
+    document.getElementById('contenedor-afiliados').textContent = 'Error al cargar afiliados';
+  }
+}
+
+function mostrarPagina(pagina) {
+  paginaActual = pagina;
+  const inicio = (pagina - 1) * afiliadosPorPagina;
+  const fin = inicio + afiliadosPorPagina;
+  const paginaAfiliados = afiliadosGlobal.slice(inicio, fin);
+  const contenedor = document.getElementById('contenedor-afiliados');
+  contenedor.innerHTML = '';
+  paginaAfiliados.forEach(a => {
+    contenedor.innerHTML += `
       <div class="afiliado-entry">
         <strong>${a.nombre_completo}</strong><br />
         DNI: ${a.dni} - N° Afiliado: ${a.nro_afiliado}
-      </div>`).join('');
+      </div>`;
+  });
+  renderizarPaginacion();
+}
 
-    actualizarPaginacion();
+function renderizarPaginacion() {
+  const totalPaginas = Math.ceil(afiliadosGlobal.length / afiliadosPorPagina);
+  const pag = document.getElementById('paginacion');
+  pag.innerHTML = '';
+  if (totalPaginas <= 1) return;
+
+  if (paginaActual > 1) {
+    const prev = document.createElement('button');
+    prev.textContent = 'Anterior';
+    prev.onclick = () => mostrarPagina(paginaActual - 1);
+    pag.appendChild(prev);
   }
 
-  function actualizarPaginacion() {
-    const totalPaginas = Math.ceil(afiliadosGlobal.length / porPagina);
-    const paginacion = document.getElementById('paginacion');
-    paginacion.innerHTML = '';
-
-    if (paginaActual > 1) {
-      const btnAnt = document.createElement('button');
-      btnAnt.textContent = 'Anterior';
-      btnAnt.onclick = () => mostrarPagina(paginaActual - 1);
-      paginacion.appendChild(btnAnt);
-    }
-
-    for (let i = 1; i <= totalPaginas; i++) {
-      const btn = document.createElement('button');
-      btn.textContent = i;
-      if (i === paginaActual) btn.classList.add('active');
-      btn.onclick = () => mostrarPagina(i);
-      paginacion.appendChild(btn);
-    }
-
-    if (paginaActual < totalPaginas) {
-      const btnSig = document.createElement('button');
-      btnSig.textContent = 'Siguiente';
-      btnSig.onclick = () => mostrarPagina(paginaActual + 1);
-      paginacion.appendChild(btnSig);
-    }
+  for (let i = 1; i <= totalPaginas; i++) {
+    const btn = document.createElement('button');
+    btn.textContent = i;
+    if (i === paginaActual) btn.classList.add('activa');
+    btn.onclick = () => mostrarPagina(i);
+    pag.appendChild(btn);
   }
 
-  async function cargarLogs() {
-    try {
-      const res = await fetch(`${api}/admin/listar-logs`, { headers });
-      const logs = await res.json();
-      const contenedor = document.getElementById('registro-cambios');
-      if (logs.error) {
-        contenedor.textContent = 'Error al cargar logs';
-        return;
-      }
-      contenedor.innerHTML = logs.map(log => `
+  if (paginaActual < totalPaginas) {
+    const next = document.createElement('button');
+    next.textContent = 'Siguiente';
+    next.onclick = () => mostrarPagina(paginaActual + 1);
+    pag.appendChild(next);
+  }
+}
+
+async function cargarLogs() {
+  console.log("🔄 Cargando logs...");
+  try {
+    const res = await fetch(`${api}/admin/listar-logs`, {
+      headers, credentials: 'include'
+    });
+    const logs = await res.json();
+    const contenedor = document.getElementById('registro-cambios');
+    if (!Array.isArray(logs)) {
+      contenedor.textContent = 'Error al cargar logs';
+      return;
+    }
+    contenedor.innerHTML = '';
+    logs.forEach(log => {
+      contenedor.innerHTML += `
         <div class="registro-entry">
           <strong>${log.accion}</strong> - ${log.nombre_completo} - DNI: ${log.dni} - N°: ${log.nro_afiliado}<br />
           <small>${log.fecha ? new Date(log.fecha).toLocaleString('es-AR') : ''}</small>
-        </div>`).join('');
-    } catch (error) {
-      console.error('Error cargar logs:', error);
-      document.getElementById('registro-cambios').textContent = 'Error al cargar logs';
-    }
+        </div>`;
+    });
+  } catch (error) {
+    console.error('Error cargar logs:', error);
+    document.getElementById('registro-cambios').textContent = 'Error al cargar logs';
   }
+}
 
-  function mostrarListadoAfiliados() {
-    const contenedor = document.getElementById('lista-afiliados');
-    contenedor.style.display = 'block';
-    cargarAfiliados();
-  }
-
-  function cerrarListadoAfiliados() {
-    document.getElementById('lista-afiliados').style.display = 'none';
-    document.getElementById('paginacion').innerHTML = '';
-  }
-
+function mostrarListadoAfiliados() {
+  const contenedor = document.getElementById('lista-afiliados');
+  contenedor.style.display = 'block';
   cargarAfiliados();
-  cargarLogs();
+}
+
+function cerrarListadoAfiliados() {
+  const contenedor = document.getElementById('lista-afiliados');
+  contenedor.style.display = 'none';
+}
 </script>
 </body>
 </html>
+
