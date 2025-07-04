@@ -170,178 +170,181 @@
 </div>
 
 
-  <script>
-    const PIN = '1906';
-    const api = 'https://afiliados-verificacion-production.up.railway.app';
+<script>
+  const PIN = '1906';
+  const api = 'https://afiliados-verificacion-production.up.railway.app';
 
-    const headers = {
-      'Content-Type': 'application/json',
-      'x-admin-pin': PIN
+  const headers = {
+    'Content-Type': 'application/json',
+    'x-admin-pin': PIN
+  };
+
+  function mostrarMensaje(id, texto, exito = true) {
+    const el = document.getElementById(id);
+    el.textContent = texto;
+    el.className = 'mensaje ' + (exito ? 'exito' : 'error');
+    setTimeout(() => {
+      el.textContent = '';
+    }, 4000);
+  }
+
+  document.getElementById('form-agregar').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const data = {
+      dni: form.dni.value.trim(),
+      nombre_completo: form.nombre_completo.value.trim(),
+      nro_afiliado: form.nro_afiliado.value.trim()
     };
 
-    function mostrarMensaje(id, texto, exito = true) {
-      const el = document.getElementById(id);
-      el.textContent = texto;
-      el.className = 'mensaje ' + (exito ? 'exito' : 'error');
-      setTimeout(() => {
-        el.textContent = '';
-      }, 4000);
+    try {
+      const res = await fetch(`${api}/admin/cargar-afiliados`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(data),
+        credentials: 'include' // ✅ necesario
+      });
+      const json = await res.json();
+      if (json.success) {
+        mostrarMensaje('mensaje-agregar', 'Afiliado agregado correctamente', true);
+        cargarAfiliados();
+        cargarLogs();
+        form.reset();
+      } else {
+        mostrarMensaje('mensaje-agregar', json.error || 'Error al agregar', false);
+      }
+    } catch (error) {
+      console.error('Error agregar:', error);
+      mostrarMensaje('mensaje-agregar', 'Error en la conexión', false);
     }
+  });
 
-    document.getElementById('form-agregar').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const form = e.target;
-      const data = {
-        dni: form.dni.value.trim(),
-        nombre_completo: form.nombre_completo.value.trim(),
-        nro_afiliado: form.nro_afiliado.value.trim()
-      };
+  document.getElementById('form-editar').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const data = {
+      dni: form.dni.value.trim(),
+      nombre_completo: form.nombre_completo.value.trim(),
+      nro_afiliado: form.nro_afiliado.value.trim()
+    };
 
-      try {
-        const res = await fetch(`${api}/admin/cargar-afiliados`, {
-          method: 'POST',
-          headers,
-          body: JSON.stringify(data)
-        });
-        const json = await res.json();
-        if (json.success) {
-          mostrarMensaje('mensaje-agregar', 'Afiliado agregado correctamente', true);
-          cargarAfiliados();
-          cargarLogs();
-          form.reset();
-        } else {
-          mostrarMensaje('mensaje-agregar', json.error || 'Error al agregar', false);
-        }
-      } catch (error) {
-        console.error('Error agregar:', error);
-        mostrarMensaje('mensaje-agregar', 'Error en la conexión', false);
+    try {
+      const res = await fetch(`${api}/admin/editar-afiliado`, {
+        method: 'PUT',
+        headers,
+        body: JSON.stringify(data),
+        credentials: 'include' // ✅ necesario
+      });
+      const json = await res.json();
+      if (json.success) {
+        mostrarMensaje('mensaje-editar', 'Afiliado modificado correctamente', true);
+        cargarAfiliados();
+        cargarLogs();
+        form.reset();
+      } else {
+        mostrarMensaje('mensaje-editar', json.error || 'Error al modificar', false);
       }
-    });
+    } catch (error) {
+      console.error('Error editar:', error);
+      mostrarMensaje('mensaje-editar', 'Error en la conexión', false);
+    }
+  });
 
-    document.getElementById('form-editar').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const form = e.target;
-      const data = {
-        dni: form.dni.value.trim(),
-        nombre_completo: form.nombre_completo.value.trim(),
-        nro_afiliado: form.nro_afiliado.value.trim()
-      };
+  document.getElementById('form-eliminar').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const data = {
+      dni: form.dni.value.trim()
+    };
 
-      try {
-        const res = await fetch(`${api}/admin/editar-afiliado`, {
-          method: 'PUT',
-          headers,
-          body: JSON.stringify(data)
-        });
-        const json = await res.json();
-        if (json.success) {
-          mostrarMensaje('mensaje-editar', 'Afiliado modificado correctamente', true);
-          cargarAfiliados();
-          cargarLogs();
-          form.reset();
-        } else {
-          mostrarMensaje('mensaje-editar', json.error || 'Error al modificar', false);
-        }
-      } catch (error) {
-        console.error('Error editar:', error);
-        mostrarMensaje('mensaje-editar', 'Error en la conexión', false);
+    try {
+      const res = await fetch(`${api}/admin/eliminar-afiliado`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(data),
+        credentials: 'include' // ✅ necesario
+      });
+      const json = await res.json();
+      if (json.success) {
+        mostrarMensaje('mensaje-eliminar', 'Afiliado eliminado correctamente', true);
+        cargarAfiliados();
+        cargarLogs();
+        form.reset();
+      } else {
+        mostrarMensaje('mensaje-eliminar', json.error || 'Error al eliminar', false);
       }
-    });
+    } catch (error) {
+      console.error('Error eliminar:', error);
+      mostrarMensaje('mensaje-eliminar', 'Error en la conexión', false);
+    }
+  });
 
-    document.getElementById('form-eliminar').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const form = e.target;
-      const data = {
-        dni: form.dni.value.trim()
-      };
-
-      try {
-        const res = await fetch(`${api}/admin/eliminar-afiliado`, {
-          method: 'POST',
-          headers,
-          body: JSON.stringify(data)
-        });
-        const json = await res.json();
-        if (json.success) {
-          mostrarMensaje('mensaje-eliminar', 'Afiliado eliminado correctamente', true);
-          cargarAfiliados();
-          cargarLogs();
-          form.reset();
-        } else {
-          mostrarMensaje('mensaje-eliminar', json.error || 'Error al eliminar', false);
-        }
-      } catch (error) {
-        console.error('Error eliminar:', error);
-        mostrarMensaje('mensaje-eliminar', 'Error en la conexión', false);
-      }
-    });
-
-    async function cargarAfiliados() {
-     try {
+  async function cargarAfiliados() {
+    try {
       const res = await fetch(`${api}/admin/listar-afiliados`, {
-       headers,
-       credentials: 'include' // ✅ agregado
+        headers,
+        credentials: 'include' // ✅ necesario
       });
       const afiliados = await res.json();
       const contenedor = document.getElementById('lista-afiliados');
       if (afiliados.error) {
-      contenedor.textContent = 'Error al cargar afiliados';
-      return;
+        contenedor.textContent = 'Error al cargar afiliados';
+        return;
       }
       contenedor.innerHTML = '';
       afiliados.forEach(a => {
-       contenedor.innerHTML += `
-        <div class="afiliado-entry">
-          <strong>${a.nombre_completo}</strong><br />
-          DNI: ${a.dni} - N° Afiliado: ${a.nro_afiliado}
-        </div>`;
+        contenedor.innerHTML += `
+          <div class="afiliado-entry">
+            <strong>${a.nombre_completo}</strong><br />
+            DNI: ${a.dni} - N° Afiliado: ${a.nro_afiliado}
+          </div>`;
       });
-     } catch (error) {
-       console.error('Error cargar afiliados:', error);
-       document.getElementById('lista-afiliados').textContent = 'Error al cargar afiliados';
-     }
+    } catch (error) {
+      console.error('Error cargar afiliados:', error);
+      document.getElementById('lista-afiliados').textContent = 'Error al cargar afiliados';
     }
+  }
 
-    async function cargarLogs() {
-     try {
-       const res = await fetch(`${api}/admin/listar-logs`, {
+  async function cargarLogs() {
+    try {
+      const res = await fetch(`${api}/admin/listar-logs`, {
         headers,
-        credentials: 'include' // ✅ agregado 
-       });
-       const logs = await res.json();
-       const contenedor = document.getElementById('registro-cambios');
-       if (logs.error) {
-       contenedor.textContent = 'Error al cargar logs';
-       return;
-       }
-       contenedor.innerHTML = '';
-       logs.forEach(log => {
-       contenedor.innerHTML += `
-        <div class="registro-entry">
-          <strong>${log.accion}</strong> - ${log.nombre_completo} - DNI: ${log.dni} - N°: ${log.nro_afiliado}<br />
-          <small>${log.fecha ? new Date(log.fecha).toLocaleString('es-AR') : ''}</small>
-        </div>`;
-       });
-      } catch (error) {
-        console.error('Error cargar logs:', error);
-        document.getElementById('registro-cambios').textContent = 'Error al cargar logs';
-      }    
+        credentials: 'include' // ✅ necesario
+      });
+      const logs = await res.json();
+      const contenedor = document.getElementById('registro-cambios');
+      if (logs.error) {
+        contenedor.textContent = 'Error al cargar logs';
+        return;
+      }
+      contenedor.innerHTML = '';
+      logs.forEach(log => {
+        contenedor.innerHTML += `
+          <div class="registro-entry">
+            <strong>${log.accion}</strong> - ${log.nombre_completo} - DNI: ${log.dni} - N°: ${log.nro_afiliado}<br />
+            <small>${log.fecha ? new Date(log.fecha).toLocaleString('es-AR') : ''}</small>
+          </div>`;
+      });
+    } catch (error) {
+      console.error('Error cargar logs:', error);
+      document.getElementById('registro-cambios').textContent = 'Error al cargar logs';
     }
+  }
 
+  cargarAfiliados();
+  cargarLogs();
 
-
+  function mostrarListadoAfiliados() {
+    const contenedor = document.getElementById('lista-afiliados');
+    contenedor.style.display = 'block';
     cargarAfiliados();
-    cargarLogs();
+  }
 
-    function mostrarListadoAfiliados() {
-     const contenedor = document.getElementById('lista-afiliados');
-     contenedor.style.display = 'block';
-      cargarAfiliados();
-    } 
-    function cerrarListadoAfiliados() {
-       const contenedor = document.getElementById('lista-afiliados');
-      contenedor.style.display = 'none';
-    }  
-  </script>
+  function cerrarListadoAfiliados() {
+    const contenedor = document.getElementById('lista-afiliados');
+    contenedor.style.display = 'none';
+  }
+</script>
+
 </body>
 </html>
