@@ -114,13 +114,20 @@
         padding: 20px;
       }
 
-      h1 { font-size: 28px; }
-      label, input, button, #resultado { font-size: 16px; }
+      h1 {
+        font-size: 28px;
+      }
 
-      .logo-bottom img { max-height: 220px; margin-top: 10px; }
+      label, input, button, #resultado {
+        font-size: 16px;
+      }
+
+      .logo-bottom img {
+        max-height: 220px;
+        margin-top: 10px;
+      }
     }
 
-    /* Botón admin flotante */
     #btnAdmin {
       position: fixed;
       top: 15px;
@@ -141,7 +148,10 @@
       padding: 0;
       line-height: 1;
     }
-    #btnAdmin:hover { background-color: #005500; }
+
+    #btnAdmin:hover {
+      background-color: #005500;
+    }
   </style>
 </head>
 <body>
@@ -167,14 +177,15 @@
   </div>
 
   <script>
-    /* ---------- Verificación de afiliados ---------- */
     const form = document.getElementById('formulario');
     const resultadoDiv = document.getElementById('resultado');
-    const descargarBtn  = document.getElementById('descargar');
+    const descargarBtn = document.getElementById('descargar');
     const btnAdmin = document.getElementById('btnAdmin');
     let dniAfiliado = '';
+    let adminWin;
 
     const urlBase = 'https://afiliados-verificacion-production.up.railway.app';
+    const PIN_CORRECTO = '1906';
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -234,18 +245,12 @@
       document.body.removeChild(form);
     });
 
-    /* ---------- Acceso a panel de administración ---------- */
-    const PIN_CORRECTO = '1906';
-    let adminWin = null;   // referencia a la ventana del admin
-
     btnAdmin.addEventListener('click', () => {
       const pin = prompt('Ingrese PIN de administrador:');
       if (!pin) return;
 
       if (pin === PIN_CORRECTO) {
-        // Guardar PIN y abrir/focalizar admin
-        localStorage.setItem('pin', PIN_CORRECTO);
-
+        sessionStorage.setItem('pin-validado', 'true');
         if (adminWin && !adminWin.closed) {
           adminWin.focus();
         } else {

@@ -10,6 +10,7 @@
       margin: 0;
       padding: 20px;
       background-color: #f0f0f0;
+      display: none;
     }
 
     h1 {
@@ -105,7 +106,7 @@
     }
   </style>
 </head>
-<body style="display: none">
+<body>
   <h1>PANEL DE ADMINISTRADORES</h1>
   <div style="text-align: center; margin-bottom: 20px;">
     <button onclick="irAVerificacion()">Ir a Verificación</button>
@@ -156,35 +157,41 @@
   </div>
 
   <script>
-    const PIN_CORRECTO = '1906';
     const api = 'https://afiliados-verificacion-production.up.railway.app';
-    const pinGuardado = localStorage.getItem('pin');
+    const PIN = '1906';
 
-    if (pinGuardado !== PIN_CORRECTO) {
+    // Verificación de acceso
+    const accesoValido = sessionStorage.getItem('pin-validado');
+    if (accesoValido !== 'true') {
       window.location.href = 'index.html';
     } else {
       document.body.style.display = 'block';
     }
 
-    let timeout;
-    function reiniciarInactividad() {
-      clearTimeout(timeout);
-      timeout = setTimeout(() => {
-        alert('Sesión cerrada por inactividad');
-        cerrarSesion();
-      }, 5 * 60 * 1000); // 5 minutos
+    // Auto logout tras 5 minutos
+    let inactividadTimer = setTimeout(cerrarSesion, 5 * 60 * 1000);
+    document.addEventListener('mousemove', resetInactividad);
+    document.addEventListener('keydown', resetInactividad);
+
+    function resetInactividad() {
+      clearTimeout(inactividadTimer);
+      inactividadTimer = setTimeout(cerrarSesion, 5 * 60 * 1000);
     }
 
-    ['click', 'mousemove', 'keydown'].forEach(evt =>
-      document.addEventListener(evt, reiniciarInactividad)
-    );
+    function cerrarSesion() {
+      sessionStorage.removeItem('pin-validado');
+      window.close(); // Intenta cerrar pestaña
+      window.location.href = 'index.html'; // Fallback si no se puede cerrar
+    }
 
-    reiniciarInactividad();
-
-    const headers = {
-      'Content-Type': 'application/json',
-      'x-admin-pin': PIN_CORRECTO
-    };
+    function irAVerificacion() {
+      if (window.opener && !window.opener.closed) {
+        window.opener.focus();
+        window.close();
+      } else {
+        window.location.href = 'index.html';
+      }
+    }
 
     function mostrarMensaje(id, texto, exito = true) {
       const el = document.getElementById(id);
@@ -207,9 +214,11 @@
       try {
         const res = await fetch(`${api}/admin/cargar-afiliados`, {
           method: 'POST',
-          headers,
-          body: JSON.stringify(data),
-          credentials: 'include'
+          headers: {
+            'Content-Type': 'application/json',
+            'x-admin-pin': PIN
+          },
+          body: JSON.stringify(data)
         });
         const json = await res.json();
         if (json.success) {
@@ -237,9 +246,11 @@
       try {
         const res = await fetch(`${api}/admin/editar-afiliado`, {
           method: 'PUT',
-          headers,
-          body: JSON.stringify(data),
-          credentials: 'include'
+          headers: {
+            'Content-Type': 'application/json',
+            'x-admin-pin': PIN
+          },
+          body: JSON.stringify(data)
         });
         const json = await res.json();
         if (json.success) {
@@ -263,9 +274,11 @@
       try {
         const res = await fetch(`${api}/admin/eliminar-afiliado`, {
           method: 'POST',
-          headers,
-          body: JSON.stringify(data),
-          credentials: 'include'
+          headers: {
+            'Content-Type': 'application/json',
+            'x-admin-pin': PIN
+          },
+          body: JSON.stringify(data)
         });
         const json = await res.json();
         if (json.success) {
@@ -284,8 +297,9 @@
     async function cargarLogs() {
       try {
         const res = await fetch(`${api}/admin/listar-logs`, {
-          headers,
-          credentials: 'include'
+          headers: {
+            'x-admin-pin': PIN
+          }
         });
         const logs = await res.json();
         const contenedor = document.getElementById('registro-cambios');
@@ -308,27 +322,6 @@
     }
 
     cargarLogs();
-
-    function cerrarSesion() {
-      localStorage.removeItem('pin');
-      if (window.opener && !window.opener.closed) {
-        window.opener.focus();
-      }
-      window.close();
-    }
-
-    function irAVerificacion() {
-      try {
-        if (window.opener && !window.opener.closed) {
-          window.opener.focus();
-          window.close();
-        } else {
-          window.open('index.html', '_blank');
-        }
-      } catch (e) {
-        window.open('index.html', '_blank');
-      }
-    }
   </script>
 </body>
 </html>
